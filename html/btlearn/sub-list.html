@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
+		<style type="text/css">
+			.sub-list li {
+				display: flex;
+				justify-content: space-between;
+				padding: .35rem .6rem .33rem .4rem;
+			}
+			.sub-list li .sub {
+				color: #222222;
+			}
+			.sub-list li .sub .icon {
+				vertical-align: middle;
+				margin-right: .2rem;
+				font-size: 115%;
+			}
+			.sub-list li .msg {
+				color: #666666;
+				font-size: 86%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--<header class="mui-bar mui-bar-nav blue">
+			<h1 class="mui-title"></h1>
+		</header>-->
+		
+		<div class="mui-content">
+			<ul class="mui-table-view same-line-list sub-list">
+				<li class="mui-table-view-cell navigate-right">
+					<div class="sub">
+						<span class="icon">
+							<svg class="svg-icon" aria-hidden="true">
+					            <use xlink:href="#Chinese" />
+					        </svg>
+						</span>语文
+					</div>
+					<span class="msg">已做5套题</span>
+				</li>
+				<li class="mui-table-view-cell navigate-right">
+					<div class="sub">
+						<span class="icon">
+							<svg class="svg-icon" aria-hidden="true">
+					            <use xlink:href="#math" />
+					        </svg>
+						</span>数学
+					</div>
+					<span class="msg">已做5套题</span>
+				</li>
+				<li class="mui-table-view-cell navigate-right">
+					<div class="sub">
+						<span class="icon">
+							<svg class="svg-icon" aria-hidden="true">
+					            <use xlink:href="#english" />
+					        </svg>
+						</span>数学
+					</div>
+					<span class="msg">已做5套题</span>
+				</li>
+				<li class="mui-table-view-cell navigate-right">
+					<div class="sub">
+						<span class="icon">
+							<svg class="svg-icon" aria-hidden="true">
+					            <use xlink:href="#physics" />
+					        </svg>
+						</span>物理
+					</div>
+					<span class="msg">已做5套题</span>
+				</li>
+			</ul>
+		</div>
+		
+		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript" src="../../js/vue.js" ></script>
+		<!--<script type="text/javascript" src="../../js/vconsole.min.js" ></script>-->
+		<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
+		<script type="text/javascript">
+			mui.init();
+			
+			var h_title = document.querySelector('.mui-title');
+			
+			mui.plusReady(function(){
+//				var self = plus.webview.currentWebview();
+//				if(self.id=="bl-his-menu") {
+//					h_title.innerHTML = "历史测试";
+//				}else if(self.id=="bl-errs-menu"){
+//					h_title.innerHTML = "错题本";
+//				}
+			});
+		</script>
+	</body>
+
+</html>

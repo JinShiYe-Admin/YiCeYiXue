@@ -1,0 +1,94 @@
+{
+	"html/btlearn/index.html": {
+		"resources": [
+			"html/btlearn/testMenu.html",
+			"html/btlearn/subList.html",
+			"html/btlearn/sub-list.html",
+			"html/btlearn/test-menu.html",
+			"html/btlearn/test-start.html"
+		],
+		"refer": [
+			"html/btlearn/testMenu.html",
+			"html/btlearn/subList.html",
+			"html/btlearn/analysis.html",
+			"html/btlearn/test-menu.html",
+			"html/btlearn/sub-list.html",
+			"html/btlearn/test-start.html",
+			"html/btlearn/cover.html",
+			"html/center/mine.html"
+		]
+	},
+	"html/btlearn/test-menu.html": {
+		"refer": [
+			"html/btlearn/test-start.html",
+			"html/login/login.html",
+			"html/btlearn/cover.html"
+		],
+		"resources": [
+			"html/btlearn/test-start.html"
+		]
+	},
+	"html/btlearn/test-start.html": {
+		"refer": [
+			"html/btlearn/testing.html"
+		]
+	},
+	"html/btlearn/testing.html": {
+		"refer": [
+			"html/btlearn/test-submit.html"
+		]
+	},
+	"html/btlearn/test-submit.html": {
+		"refer": [
+			"html/btlearn/test-result.html"
+		]
+	},
+	"html/btlearn/test-result.html": {
+		"refer": [
+			"html/btlearn/testing.html"
+		]
+	},
+	"html/btlearn/analysis.html": {
+		"refer": [
+			"html/btlearn/analysis-detail.html"
+		]
+	},
+	"html/btlearn/analysis-detail.html": {
+		"refer": [
+			"html/btlearn/testing.html"
+		]
+	},
+	"html/login/login.html": {
+		"refer": [
+			"html/btlearn/index.html",
+			"html/login/register.html"
+		]
+	},
+	"html/center/mine.html": {
+		"refer": [
+			"html/login/login.html",
+			"html/center/headImg.html",
+			"html/center/about.html",
+			"html/login/modifyPassword.html",
+			"html/order/orderList.html"
+		]
+	},
+	"html/order/orderList.html": {
+		"refer": [
+			"html/order/packageDetails_order.html",
+			"html/order/packageDetails_renew.html",
+			"html/order/packageOrder_paymentPage_new.html",
+			"html/order/packageRenew_paymentPage.html"
+		]
+	},
+	"html/order/packageDetails_order.html": {
+		"refer": [
+			"html/order/packageOrder_paymentPage_new.html"
+		]
+	},
+	"html/order/packageDetails_renew.html": {
+		"refer": [
+			"html/order/packageRenew_paymentPage.html"
+		]
+	}
+}
