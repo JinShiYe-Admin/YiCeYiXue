@@ -1,7 +1,7 @@
 //api
-var loginUrl = "http://192.168.0.125:8080/yiceyixue/Ycyx/ApiTest/login/sid/";
+//var loginUrl = "http://192.168.0.125:8080/yiceyixue/Ycyx/ApiTest/login/sid/";
 //var host = "http://192.168.0.125:8080/yiceyixue";
-var host = "http://139.129.252.49:8080/yiceyixue";
+//var host = "http://139.129.252.49:8080/yiceyixue";
 
 
 var REM = parseFloat(localStorage.getItem("REM"));
@@ -22,6 +22,7 @@ function setRem(doc, win) {
 			if(clientWidth > 750) clientWidth = 750;
 			REM = 100 * (clientWidth / 750);
 			docEl.style.fontSize = REM + 'px'; //1rem = 100px
+			localStorage.setItem("REM", REM);
 			setNavHeight();
 		};
 	if(!doc.addEventListener) return;
@@ -50,10 +51,6 @@ function setNavHeight() {
 //	}
 //}
 
-//套餐订购、续订提醒
-function busWarning() {
-	document.body 
-}
 
 // 获取套餐学段名
 function getPrdName(fx) {
@@ -95,6 +92,96 @@ function blAjax(url, ops) {
 	});
 }
 
+function commonAjax(url, ops) {
+	if(plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
+		mui.toast("网络异常，请检查网络设置！");
+		plus.nativeUI.closeWaiting();
+		return false;
+	}
+	var times = 0;
+	sendAjax(window.storageKeyName.YCYXHOST+url, ops, times);
+}
+function sendAjax(url, ops, times) {
+	//ops.data = ;
+	mui.ajax(url, {
+		data: ops.data,
+		type: ops.type||"post",
+		timeout: ops.timeout||6000,
+		dataType: 'json',
+		success: function(res) {
+			if(res.state=="ok") {
+				ops.success && ops.success(res);
+			}else{
+				if(res.code==6){
+					console.log("token reset");
+					//续订令牌
+					var publicParameter = store.get(window.storageKeyName.PUBLICPARAMETER);
+					var personal = store.get(window.storageKeyName.PERSONALINFO);
+					//需要参数
+					var comData = {
+						uuid: publicParameter.uuid,
+						utid: personal.utid,
+						utoken: personal.utoken,
+						appid: publicParameter.appid,
+						schid: personal.schid,
+						utp: personal.utp,
+						utname: personal.utname
+					};
+					//令牌续订
+					postDataEncry('TokenReset', {}, comData, 0, function(data1) {
+						if(data1.RspCode == 0) {
+							personal.utoken = data1.RspData;
+							store.set(window.storageKeyName.PERSONALINFO, personal);
+							if(times>5) {
+								plus.nativeUI.toast("令牌过期，请重新登录");
+							}else{
+								times++;
+								sendAjax(url, ops, times);
+							}
+						}
+					});
+				}else{
+					var f = ops.fail && ops.fail(res);
+					if(f!="noToast"){
+						plus.nativeUI.toast( res.msg||'操作失败');
+					}
+				}
+			}
+		},
+		error:function(xhr,type,errorThrown){
+			if(times>2) {
+				plus.nativeUI.toast( '服务器异常：'+type );
+				ops.error && ops.error();
+			}else{
+				times++;
+				sendAjax(url, ops, times);
+			}
+		}
+	});
+}
+
+//断网监听
+document.addEventListener("netchange", function(){
+	isNetAbort = (plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE);
+	if(plus.webview.currentWebview().isVisible()) {
+		if(isNetAbort) {
+			mui.toast("网络异常，请检查网络设置！", {duration:'long', type:'div'});
+		} else {
+			mui.toast("已接入网络", {duration:'short', type:'div'});
+		}
+	}
+}, false);
+
+function netErrorTip() {
+	var net_abort_html = '<div class="net-error-box">'+
+		'<svg class="icon" aria-hidden="true"><use xlink:href="#icon-icon-net-error"></use></svg>'+
+		'<div style="padding: 0.14rem;">页面加载异常，点击重试</div>'+
+		'<button type="button" onclick="reload()">重新加载</button>'+
+	'</div>';
+	$(".mui-content").html("").append(net_abort_html);
+}
+
+
 //打开登录页
 function goLogin() {
 	mui.openWindow({
@@ -113,6 +200,67 @@ function filterArray(arr, key, val) {
 	});
 	return r;
 }
+
+//树形菜单
+(function(obj){
+	if(!obj) return;
+	Vue.component('tree-menu', {
+		template: '<div class="tree-item">'+
+					'<div v-if="model.children&&model.children.length" class="label-wrapper mui-ellipsis" @tap="toggleChildren" :style="indent">'+
+						'<i class="label-icon" :class="iconClasses"></i>'+
+						'<span class="label-name">{{model.name}}</span>'+
+					'</div>'+
+					'<div v-else class="label-wrapper mui-ellipsis" @tap="nodeClick(model)" :style="indent">'+
+						'<span class="label-name">{{model.name}}</span>'+
+						'<span v-if="model.is_finish" class="done-box icon-true"></span>'+
+					'</div>'+
+					'<tree-menu v-show="showChildren" v-for="(node, k) in model.children" :model="node" :depth="depth + 1" :key="k" @node-click="outClick"></tree-menu>'+
+				'</div>',
+		props: ['model','depth'],
+		data: function() {
+			return {
+				showChildren: false
+			}
+		},
+		computed: {
+			iconClasses: function() {
+				return {
+					'icon-arrow-up': !this.showChildren,
+					'icon-arrow-down': this.showChildren
+				}
+			},
+			indent: function() {
+			      return this.depth>0 ? { 'padding-left': this.depth*0.55+"rem" } : null;
+			}
+		},
+		methods: {
+			closeChild: function(model) {
+				var _this = this;
+				var chd = model.$children;
+				chd.forEach(function(v){
+					if(v.model&&v.model.id!=_this.model.id) {
+						v.showChildren = false;
+						v.$children && _this.closeChild(v);
+					}
+				});
+			},
+			toggleChildren: function() {
+				this.showChildren = !this.showChildren;
+				//关闭其它层
+				if(this.showChildren) {
+					var parent = this.$parent;
+					parent && this.closeChild(parent);
+				}
+			},
+			nodeClick: function(model){
+                this.$emit('node-click', model);
+            },
+            outClick: function(model){
+                this.$emit('node-click', model);
+            }
+		}
+	});
+})(document.querySelector(".vue-tree"));
 
 //svg图标
 (function(window) {

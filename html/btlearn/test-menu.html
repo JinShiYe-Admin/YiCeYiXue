@@ -67,6 +67,21 @@
 		<script type="text/javascript" src="../../js/vue.js" ></script>
 		<!--<script type="text/javascript" src="../../js/vconsole.min.js" ></script>-->
 		<!--<script type="text/javascript" src="../../js/layer/mobile/layer.js"></script>-->
+		<script src='../../js/jquery.min.js'></script>
+		
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/libs/RSA/BigInt.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/libs/RSA/RSA.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/utils/RSAEncrypt.js" type="text/javascript" charset="utf-8"></script>
+		<!---->
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/utils/signHmacSHA1.js'></script>
+		<script src="../../js/publicProtocolNew.js"></script>
+		<script src="../../js/storageKeyName.js"></script>
+		<script src="../../js/utils/store.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/utils/events.js"></script>
+		
 		<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
 		<script type="text/javascript">
 			
@@ -138,8 +153,7 @@
 					selectNode: function(model) {
 						plus.nativeUI.showWaiting();
 						// 向 开始页 传递数据
-//						blAjax("../../test_data/practice_schedule.json", {
-						blAjax(host+"/Ycyx/Practice/schedule", {
+						commonAjax("/Ycyx/Practice/schedule", {
 							data: {
 								catalogId: model.id
 							},
@@ -168,9 +182,10 @@
 			});
 			
 			window.addEventListener("setMenu", function(e){
+				console.log(e.detail);
 				testMenu.menu = e.detail.menu;
 				testMenu.$nextTick(function(){
-					plus.nativeUI.closeWaiting();
+//					plus.nativeUI.closeWaiting();
 					if(!testMenu.isLoaded) testMenu.isLoaded = true;
 				});
 			});

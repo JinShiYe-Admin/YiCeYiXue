@@ -40,6 +40,9 @@ input {
 body, .mui-content {
 	background-color: #FFFFFF;
 }
+.mui-bar-tab a {
+	touch-action: none;
+}
 .mui-content {
 	height: 100%;
 	overflow-y: auto;				
@@ -236,6 +239,24 @@ ul li.navigate-right:before {
 	animation: rotate 1s linear infinite;
 }
 
+.sub-list li {
+	display: flex;
+	justify-content: space-between;
+	padding: .35rem .6rem .33rem .4rem;
+}
+.sub-list li .sub {
+	color: #222222;
+}
+.sub-list li .sub .icon {
+	vertical-align: middle;
+	margin-right: .2rem;
+	font-size: 115%;
+}
+.sub-list li .msg {
+	color: #666666;
+	font-size: 86%;
+}
+
 
 /*图标*/
 .icon-arrow-up, .icon-arrow-down {
@@ -265,11 +286,8 @@ ul li.navigate-right:before {
 }
 
 /*动画*/
-.slide-down-enter-active {
+.slide-down-enter-active, .slide-down-leave-active {
 	transition: transform .25s ease;
-}
-.slide-down-leave-active {
-	transition: transform .2s linear;
 }
 .slide-down-enter, .slide-down-leave-to {
 	/*top: 0!important;*/

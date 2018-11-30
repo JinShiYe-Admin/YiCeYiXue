@@ -110,6 +110,21 @@
 		<script type="text/javascript" src="../../js/vue.min.js" ></script>
 		<!--<script type="text/javascript" src="../../js/vconsole.min.js" ></script>-->
 		<script type="text/javascript" src="../../js/echarts.min.js" ></script>
+		<script src='../../js/jquery.min.js'></script>
+		
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/libs/RSA/BigInt.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/libs/RSA/RSA.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/utils/RSAEncrypt.js" type="text/javascript" charset="utf-8"></script>
+		<!---->
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/utils/signHmacSHA1.js'></script>
+		<script src="../../js/publicProtocolNew.js"></script>
+		<script src="../../js/storageKeyName.js"></script>
+		<script src="../../js/utils/store.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/utils/events.js"></script>
+		
 		<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
 		<script type="text/javascript">
 			mui.init();
@@ -171,7 +186,7 @@
 
 			//获取分析数据
 			function getAnalysisData() {
-				blAjax(host+"/Ycyx/Analysis/index", {
+				commonAjax("/Ycyx/Analysis/index", {
 					success: function(res){
 						var res_data = JSON.parse(res.data);
 						analysis.alsList = res_data.analysis;

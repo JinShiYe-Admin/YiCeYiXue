@@ -32,12 +32,12 @@
 	<body>
 		<header id="header" class="mui-bar mui-bar-nav blue" v-cloak>
 			<a v-show="!title" class="mui-icon mui-pull-right grade" @tap.stop="showTopPannel(1)">{{gradeItem?gradeItem.pername:"学段"}}<span class="mui-icon-arrowdown"></span></a>
-			<a class="mui-icon mui-pull-left" @tap="openCenter">
+			<!--<a class="mui-icon mui-pull-left" @tap="openCenter">
 				<img v-if="headImg" :src="headImg" class="head-img"/>
 				<svg v-else class="svg-icon" aria-hidden="true">
 		            <use xlink:href="#mine" />
 		       	</svg>
-			</a>
+			</a>-->
 			<h1 class="mui-title" v-if="!title">
 				<a class="subject mui-icon" @click.stop="showTopPannel(2)">{{subjectItem?(subjectItem.subname||"科目"):"科目"}}<span class="mui-icon-arrowdown"></span></a>
 			</h1>
@@ -96,7 +96,6 @@
 		<script src="../../js/storageKeyName.js"></script>
 		<script src="../../js/utils/store.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/utils/events.js"></script>
-		
 		
 		<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
 		<script type="text/javascript">
@@ -162,8 +161,7 @@
 						plus.nativeUI.showWaiting();
 						var _this = this;
 						//获取目录
-//						blAjax("../../test_data/practice_index.json", {
-						blAjax(host+"/Ycyx/Practice/index", {
+						commonAjax("/Ycyx/Practice/index", {
 							data: data||{},
 							timeout: 6000,
 							type: 'post',
@@ -182,6 +180,7 @@
 								}
 								//设置test-menu目录
 								mui.fire(test_menu, "setMenu", {menu: rdata.catalogs});
+								plus.nativeUI.closeWaiting();
 							},
 							fail: function(res){
 								if(isRep){

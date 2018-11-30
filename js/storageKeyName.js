@@ -3,6 +3,8 @@
 var storageKeyName = (function(mod) {
 
 	mod.key = 1; //0,开发;1,部署外网
+	//益测益学host：http://192.168.0.125:8080/yiceyixue; http://139.129.252.49:8080/yiceyixue;
+	mod.YCYXHOST = "http://192.168.0.125:8080/yiceyixue";
 	var exLog = console.log;
 	console.log = function(hint, object) {
 		if(mod.key === 1) {

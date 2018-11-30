@@ -57,6 +57,21 @@
 		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript" src="../../js/vue.js" ></script>
 		<!--<script type="text/javascript" src="../../js/vconsole.min.js" ></script>-->
+		<script src='../../js/jquery.min.js'></script>
+		
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/libs/RSA/BigInt.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/libs/RSA/RSA.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/utils/RSAEncrypt.js" type="text/javascript" charset="utf-8"></script>
+		<!---->
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/utils/signHmacSHA1.js'></script>
+		<script src="../../js/publicProtocolNew.js"></script>
+		<script src="../../js/storageKeyName.js"></script>
+		<script src="../../js/utils/store.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/utils/events.js"></script>
+		
 		<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
 		<script type="text/javascript">
 			var self;
@@ -78,7 +93,14 @@
 						sbData.answerArray.forEach(function(v){
 							answerJson[v.question_id] = v.stu_answer;
 						});
-						blAjax(host+"/Ycyx/Practice/savePaper", {
+						console.log({
+							diskey: sbData.diskey,
+								catalogId: sbData.catalogId,
+								name: sbData.name,
+								usedTime: sbData.usedTime,
+								answerJson: JSON.stringify(answerJson)
+						});
+						commonAjax("/Ycyx/Practice/savePaper", {
 							data: {
 								diskey: sbData.diskey,
 								catalogId: sbData.catalogId,
@@ -87,6 +109,7 @@
 								answerJson: JSON.stringify(answerJson)
 							},
 							success: function(res) {
+								console.log(res);
 								var res_data = JSON.parse(res.data);
 								//结果页
 								var bl_result = plus.webview.getWebviewById('bl-test-result');
@@ -111,7 +134,8 @@
 								mui.fire(plus.webview.getWebviewById('bl-index'), "refresh");
 								plus.nativeUI.closeWaiting();
 							},
-							fail: function() {
+							fail: function(res) {
+								console.log(res);
 								plus.nativeUI.closeWaiting();
 							},
 							error: function() {

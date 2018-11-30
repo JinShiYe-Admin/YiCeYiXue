@@ -138,9 +138,20 @@
 		<!--<script type="text/javascript" src="../../js/vconsole.min.js" ></script>-->
 		<script type="text/javascript" src="../../js/jquery.min.js" ></script>
 		<script type="text/javascript" src="../../js/layer/layer.js" ></script>
-		<!--<script type="text/javascript" src="../../js/mui.lazyload.js" ></script>
-		<script type="text/javascript" src="../../js/mui.lazyload.img.js" ></script>-->
-		<!--<script type="text/javascript" src="../../js/echo.min.js" ></script>-->
+		
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/libs/RSA/BigInt.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/libs/RSA/RSA.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/utils/RSAEncrypt.js" type="text/javascript" charset="utf-8"></script>
+		<!---->
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/utils/signHmacSHA1.js'></script>
+		<script src="../../js/publicProtocolNew.js"></script>
+		<script src="../../js/storageKeyName.js"></script>
+		<script src="../../js/utils/store.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/utils/events.js"></script>
+		
 		<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
 		<script type="text/javascript">
 			var self;
@@ -190,7 +201,7 @@
 				}else{ 
 					//新测试
 					plus.nativeUI.showWaiting();
-					blAjax(host+"/Ycyx/Practice/createPaper", {
+					commonAjax("/Ycyx/Practice/createPaper", {
 						data: {
 							catalogId: self.catalogId
 						},

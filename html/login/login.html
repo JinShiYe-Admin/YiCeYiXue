@@ -66,7 +66,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav blue">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<a id='register' class="mui-icon mui-pull-right">注册</a>
+			<!--<a id='register' class="mui-icon mui-pull-right">注册</a>-->
 			<h1 class="mui-title">益测益学</h1>
 		</header>
 		<div class="mui-content">
@@ -123,6 +123,7 @@
 	
 	<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
 	<script type="text/javascript">
+		setRem(document, window);
 		var tempModel = {};
 		var loginFlag = 0; //0自动登录，1不自动登录
 		mui.plusReady(function() {
@@ -197,10 +198,10 @@
 			}
 		});
 		
-		document.getElementById("register").addEventListener('tap', function (event) {
-	        console.log("注册");
-	        mui.openWindow({url: 'register.html'});
-	    });
+//		document.getElementById("register").addEventListener('tap', function (event) {
+//	        console.log("注册");
+//	        mui.openWindow({url: 'register.html'});
+//	    });
 
 		window.addEventListener('quit', function(data) {
 			loginFlag = 1;

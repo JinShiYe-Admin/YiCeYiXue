@@ -105,6 +105,7 @@
 				    	</div>
 				    </li>
 				</ul>
+				<p v-if="!failCatalogInfo.length&&isLoaded" class="mui-text-center" style="padding-top: 10px;">无薄弱知识点</p>
 			</div>
 		</div>
 		
@@ -112,6 +113,21 @@
 		<script type="text/javascript" src="../../js/vue.min.js" ></script>
 		<!--<script type="text/javascript" src="../../js/vconsole.min.js" ></script>-->
 		<script type="text/javascript" src="../../js/echarts.min.js" ></script>
+		<script src='../../js/jquery.min.js'></script>
+		
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/libs/RSA/BigInt.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/libs/RSA/RSA.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/utils/RSAEncrypt.js" type="text/javascript" charset="utf-8"></script>
+		<!---->
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/utils/signHmacSHA1.js'></script>
+		<script src="../../js/publicProtocolNew.js"></script>
+		<script src="../../js/storageKeyName.js"></script>
+		<script src="../../js/utils/store.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/utils/events.js"></script>
+			
 		<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
 		<script type="text/javascript">
 			var self, testLine;
@@ -137,7 +153,8 @@
 					subname: "",
 					subScores: [],
 					avgScore: "",
-					failCatalogInfo: []
+					failCatalogInfo: [],
+					isLoaded: false
 				},
 				mounted: function() {
 					testLine = echarts.init(document.getElementById("testLine"));
@@ -160,6 +177,7 @@
 			
 			//更新数据
 			window.addEventListener("refresh", function(){
+				analysisDetail.isLoaded = false;
 				getSubDetail();
 			});
 			
@@ -170,13 +188,14 @@
 			
 			//获取分析数据
 			function getSubDetail() {
-				blAjax(host+"/Ycyx/Analysis/subDetail", {
+				commonAjax("/Ycyx/Analysis/subDetail", {
 					data: {subcode: self.subcode},
 					success: function(res){
 						var data = JSON.parse(res.data);
 						analysisDetail.subScores = data.subScores;
 						analysisDetail.avgScore = data.avgScore;
 						analysisDetail.failCatalogInfo = data.failCatalogInfo;
+						analysisDetail.isLoaded = true;
 						getLine();
 					}
 				});
