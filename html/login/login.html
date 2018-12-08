@@ -8,10 +8,6 @@
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
 		<style type="text/css">
-			.mui-bar-nav.blue {
-				background:linear-gradient(-55deg,rgba(60,157,251,1),rgba(60,157,251,1));
-				box-shadow: none;
-			}
 			.mui-content .banner {
 				margin-top: -100px;
 				height: 2.5rem; 
@@ -123,7 +119,7 @@
 	
 	<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
 	<script type="text/javascript">
-		setRem(document, window);
+//		setRem(document, window);
 		var tempModel = {};
 		var loginFlag = 0; //0自动登录，1不自动登录
 		mui.plusReady(function() {
@@ -144,19 +140,19 @@
 			//自动登录
 			setUUID();
 			
-			document.addEventListener("netchange", wainshow, false);
-			function wainshow() {
-				if(plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
-					mui.toast("网络异常，请检查网络设置！");
-				} else {
-					mui.toast("已接入网络");
-					//判断上次有没有登录，如果登录，就不执行登录协议
-					if(loginFlag == 0) {
-						loginFlag = 1;
-						setUUID();
-					}
-				}
-			}
+//			document.addEventListener("netchange", wainshow, false);
+//			function wainshow() {
+//				if(plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
+//					mui.toast("网络异常，请检查网络设置！");
+//				} else {
+//					mui.toast("已接入网络");
+//					//判断上次有没有登录，如果登录，就不执行登录协议
+//					if(loginFlag == 0) {
+//						loginFlag = 1;
+//						setUUID();
+//					}
+//				}
+//			}
 			
 			var backButtonPress = 0;
 			mui.back = function(event) {
@@ -173,16 +169,16 @@
 			};
 			
 			//沉浸式，保存状态栏高度
-			if(plus.navigator.isImmersedStatusbar()) {
-				var statusbarHeight = plus.navigator.getStatusbarHeight();
-				localStorage.setItem("statusbarHeight", statusbarHeight);
-				var nav = document.querySelector(".mui-bar-nav");
-				if(nav) {
-					nav.style.paddingTop = statusbarHeight+"px";
-					var content = document.querySelector(".mui-bar-nav~.mui-content");
-					if(content) content.style.paddingTop = nav.offsetHeight+"px";
-				}
-			}
+//			if(plus.navigator.isImmersedStatusbar()) {
+//				var statusbarHeight = plus.navigator.getStatusbarHeight();
+//				localStorage.setItem("statusbarHeight", statusbarHeight);
+//				var nav = document.querySelector(".mui-bar-nav");
+//				if(nav) {
+//					nav.style.paddingTop = statusbarHeight+"px";
+//					var content = document.querySelector(".mui-bar-nav~.mui-content");
+//					if(content) content.style.paddingTop = nav.offsetHeight+"px";
+//				}
+//			}
 			
 		});
 
@@ -308,7 +304,7 @@
 									permission = false;
 								}
 								if(permission) {
-									plus.webview.open('../btlearn/index.html', 'bl-index', 
+									plus.webview.open('../btlearn/ycyxIndex.html', 'bl-index', 
 									{}, "auto", 200, function(){
 										plus.webview.currentWebview().close();
 									});

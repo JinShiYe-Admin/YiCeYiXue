@@ -178,7 +178,8 @@
 			"html/btlearn/testing.html": {
 				"resources": [],
 				"refer": [
-					"html/btlearn/test-submit.html"
+					"html/btlearn/test-submit.html",
+					"html/btlearn/testSubmit.html"
 				],
 				"priority": 0
 			},
@@ -214,7 +215,8 @@
 				"resources": [],
 				"refer": [
 					"html/btlearn/index.html",
-					"html/login/register.html"
+					"html/login/register.html",
+					"html/btlearn/ycyxIndex.html"
 				],
 				"priority": 0
 			},
@@ -250,6 +252,45 @@
 				"resources": [],
 				"refer": [
 					"html/order/packageRenew_paymentPage.html"
+				],
+				"priority": 0
+			},
+			"html/btlearn/ycyxIndex.html": {
+				"resources": [],
+				"refer": [
+					"html/center/mine.html",
+					"html/btlearn/test-start.html",
+					"html/btlearn/analysis-detail.html",
+					"html/btlearn/testStart.html",
+					"html/btlearn/analysisDetail.html"
+				],
+				"priority": 0
+			},
+			"html/btlearn/analysisDetail.html": {
+				"resources": [],
+				"refer": [
+					"html/btlearn/testing.html"
+				],
+				"priority": 0
+			},
+			"html/btlearn/testStart.html": {
+				"resources": [],
+				"refer": [
+					"html/btlearn/testing.html"
+				],
+				"priority": 0
+			},
+			"html/btlearn/testResult.html": {
+				"resources": [],
+				"refer": [
+					"html/btlearn/testing.html"
+				],
+				"priority": 0
+			},
+			"html/btlearn/testSubmit.html": {
+				"resources": [],
+				"refer": [
+					"html/btlearn/testResult.html"
 				],
 				"priority": 0
 			}

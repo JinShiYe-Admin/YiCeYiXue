@@ -35,7 +35,8 @@
 	},
 	"html/btlearn/testing.html": {
 		"refer": [
-			"html/btlearn/test-submit.html"
+			"html/btlearn/test-submit.html",
+			"html/btlearn/testSubmit.html"
 		]
 	},
 	"html/btlearn/test-submit.html": {
@@ -61,7 +62,8 @@
 	"html/login/login.html": {
 		"refer": [
 			"html/btlearn/index.html",
-			"html/login/register.html"
+			"html/login/register.html",
+			"html/btlearn/ycyxIndex.html"
 		]
 	},
 	"html/center/mine.html": {
@@ -89,6 +91,35 @@
 	"html/order/packageDetails_renew.html": {
 		"refer": [
 			"html/order/packageRenew_paymentPage.html"
+		]
+	},
+	"html/btlearn/ycyxIndex.html": {
+		"refer": [
+			"html/center/mine.html",
+			"html/btlearn/test-start.html",
+			"html/btlearn/analysis-detail.html",
+			"html/btlearn/testStart.html",
+			"html/btlearn/analysisDetail.html"
+		]
+	},
+	"html/btlearn/analysisDetail.html": {
+		"refer": [
+			"html/btlearn/testing.html"
+		]
+	},
+	"html/btlearn/testStart.html": {
+		"refer": [
+			"html/btlearn/testing.html"
+		]
+	},
+	"html/btlearn/testResult.html": {
+		"refer": [
+			"html/btlearn/testing.html"
+		]
+	},
+	"html/btlearn/testSubmit.html": {
+		"refer": [
+			"html/btlearn/testResult.html"
 		]
 	}
 }

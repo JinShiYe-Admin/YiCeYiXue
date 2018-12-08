@@ -143,6 +143,7 @@
 				margin-right: 0.2rem;
 				vertical-align: middle;
 				margin-top: -3px;
+				padding-top: 1px;
 			}
 			ul.als-list li .sub .label.bad {
 				color: #DB4848;
@@ -172,20 +173,20 @@
 	</head>
 
 	<body>
-		<header id="header" class="mui-bar mui-bar-nav blue" v-cloak>
-			<a v-show="!title" class="mui-icon mui-pull-right grade" @tap.stop="showTopPannel(1)">{{gradeItem?gradeItem.pername:"学段"}}<span class="mui-icon-arrowdown"></span></a>
-			<a class="mui-icon mui-pull-left" @tap="openCenter">
+		<header id="header" class="mui-bar mui-bar-nav blue">
+			<a v-show="!title" class="mui-icon mui-pull-right grade" @tap.stop="showTopPannel(1)" v-cloak>{{gradeItem?gradeItem.pername:"学段"}}<span class="mui-icon-arrowdown"></span></a>
+			<!--<a class="mui-icon mui-pull-left" @tap="openCenter">
 				<img v-if="headImg" :src="headImg" class="head-img"/>
 				<svg v-else class="svg-icon" aria-hidden="true">
 		            <use xlink:href="#mine" />
 		       	</svg>
-			</a>
-			<h1 class="mui-title" v-if="title">{{title}}</h1>
+			</a>-->
+			<h1 class="mui-title" v-if="title" v-text="title"></h1>
 			<h1 class="mui-title" v-else>
-				<a class="subject mui-icon" @click.stop="showTopPannel(2)">{{subjectItem?(subjectItem.subname||"科目"):"科目"}}<span class="mui-icon-arrowdown"></span></a>
+				<a class="subject mui-icon" @click.stop="showTopPannel(2)" v-cloak>{{subjectItem?(subjectItem.subname||"科目"):"科目"}}<span class="mui-icon-arrowdown"></span></a>
 			</h1>
 			<transition name="slide-down">	
-				<div class="options-pannel mui-clearfix" v-show="showItem">
+				<div class="options-pannel mui-clearfix" v-show="showItem" v-cloak>
 					<div v-for="(v, i) in item.list" class="radio-wrap">
 						<label :class="{selected:v.percode==item.selected||v.subcode==item.selected}" @click="selectItem">
 							<input type="radio" v-model="item.selected" name="item"  :value="v.percode||v.subcode" />{{v.pername||v.subname||"未命名"}}
@@ -231,6 +232,7 @@
 		</nav>
 		
 		<div class="mui-content">
+			<!--组卷测试-->
 			<div id="test-menu" class="mui-control-content mui-active">
 				<div id="testMenu" class="mui-content vue-tree">
 					<div class="kn-menu" v-cloak>
@@ -239,6 +241,7 @@
 					</div>
 				</div>
 			</div>
+			<!--历史测试-->
 			<div id="his-menu" class="mui-control-content">
 				<ul class="mui-table-view same-line-list sub-list">
 					<li class="mui-table-view-cell navigate-right">
@@ -263,6 +266,7 @@
 					</li>
 				</ul>
 			</div>
+			<!--错题本-->
 			<div id="errs-menu" class="mui-control-content">
 				<ul class="mui-table-view same-line-list sub-list">
 					<li class="mui-table-view-cell navigate-right">
@@ -287,8 +291,9 @@
 					</li>
 				</ul>
 			</div>
+			<!--学情分析-->
 			<div id="bl-analysis" class="mui-control-content">
-				<div id="analysis">
+				<div id="analysisTab">
 					<div class="als-title mui-text-center mui-ellipsis">{{user_name}}学情分析报告</div>
 					<div style="padding: .2rem .22rem .15rem;">学科均衡:</div>
 					<div id="subRadar"></div>
@@ -308,7 +313,7 @@
 					        <div class="score">{{item.avg_score}}分/100分</div>
 					    </li>
 					</ul>
-					<p v-else class="mui-text-center">您还未提交过试题</p>
+					<p v-else class="mui-text-center" v-show="isShowed">您还未提交过试题</p>
 				</div>
 			</div>
 		</div>
@@ -334,7 +339,7 @@
 		
 		<script type="text/javascript" src="../../js/btlearn/common.js"></script>
 		<script type="text/javascript">
-			var self, bookMenuView, center;
+			var self, bookMenuView, center, test_start;
 			
 			//认证信息
 			var userInfo = store.get(window.storageKeyName.PERSONALINFO);
@@ -351,110 +356,6 @@
 			
 			var mask = mui.createMask(function(){
 				header.showItem = false;
-			});
-
-			//头部
-			var header = new Vue({
-				el: "#header",
-				data: {
-					grade: {selected: 0, list: []},
-					subject: {selected: 0, list: []},
-					topPannel: 0, //1-grade，2-subject
-					title: "",
-					headImg: setImg(userInfo?userInfo.imgurl:""),
-					showItem: false
-				},
-				computed: {
-					item: function() {
-						if(this.topPannel==1){
-							return this.grade;
-						}else if(this.topPannel==2) {
-							return this.subject;
-						}else{
-							return {selected: 0, list: []};
-						}
-					},
-					gradeItem: function() {
-						var selected = this.grade.list?filterArray(this.grade.list, "percode", this.grade.selected)[0]:null;
-						return selected;
-					},
-					subjectItem: function() {
-						var selected = this.subject.list?filterArray(this.subject.list, "subcode", this.subject.selected)[0]:null;
-						return selected;
-					}
-				},
-				methods: {
-					//显示头部选项
-					showTopPannel: function(type) {
-						if(this.topPannel==type&&this.showItem) {
-							this.showItem = false;
-							mask.close();
-						}else{
-							this.showItem = true;
-							this.topPannel = type;
-							mask.show();
-						}
-					},
-					// 设置目录
-					setMenu: function(data) {
-						console.log("设置目录");
-						testMenu.isLoaded = false;
-						plus.nativeUI.showWaiting();
-						var _this = this;
-						//获取目录
-						commonAjax("/Ycyx/Practice/index", {
-							data: data||{},
-							timeout: 6000,
-							type: 'post',
-							success: function(res){
-								var rdata = JSON.parse(res.data);
-								//科目
-								_this.subject = {
-									selected: rdata.subcode,
-									list: rdata.subs||[]
-								};
-								//学段
-								_this.grade = {
-									selected: rdata.percode,
-									list: rdata.pers||[]
-								}
-								//设置test-menu目录
-								testMenu.menu = rdata.catalogs;
-								testMenu.isLoaded = true;
-							},
-							fail: function(res){
-								plus.nativeUI.closeWaiting();
-							},
-							error: function(){
-								plus.nativeUI.closeWaiting();
-							}
-						});
-					},
-					//打开个人中心
-					openCenter: function(){
-						if(!center) return;
-						center.show("slide-in-left", 150);
-						//主窗体开始侧滑；
-						self.setStyle({
-							left: '70%',
-							mask:"rgba(0,0,0,0.35)",
-							transition: {
-								duration: 150
-							}
-						});
-					},
-					//选择选项
-					selectItem: function(){
-						this.showItem = false;
-						this.$nextTick(function () {
-							if(this.topPannel==1){
-								this.setMenu({percode: this.grade.selected});
-							}else if(this.topPannel==2){
-								this.setMenu({percode: this.grade.selected, subcode: this.subject.selected});
-							}
-						});
-					}
-				}
 			});
 			
 			mui.init();
@@ -481,6 +382,12 @@
 					}, 1500);
 					return false;
 				};
+				
+				//开始测试页
+				test_start = mui.preload({
+					url: 'testStart.html',
+					id: 'bl-test-start'
+				});
 				
 				//个人中心
 				center = mui.preload({
@@ -545,11 +452,13 @@
 				
 				// 刷新数据
 				window.addEventListener("refresh", function(e){
-//					his_index.reload();
-//					errs_index.reload();
-//					mui.fire(analysis, "refresh");
-//					var als_detail = plus.webview.getWebviewById('bl-analysis-detail');
-//					als_detail && mui.fire(als_detail, "refresh");
+					if(activeTab=="bl-analysis"){
+						getAnalysisData();
+					}else{
+						analysis.isShowed = false;
+					}
+					var als_detail = plus.webview.getWebviewById('bl-analysis-detail');
+					als_detail && mui.fire(als_detail, "refresh");
 				});
 				
 				//修改头像
@@ -577,11 +486,118 @@
 						title = "学情分析";
 						if(!analysis.isShowed){
 							getAnalysisData();
-							analysis.isShowed = true;
 						}
 						break;
 				}
 				header.title = title;
+			});
+			
+			//头部
+			var header = new Vue({
+				el: "#header",
+				data: {
+					grade: {selected: 0, list: []},
+					subject: {selected: 0, list: []},
+					topPannel: 0, //1-grade，2-subject
+					title: "",
+					headImg: setImg(userInfo?userInfo.imgurl:""),
+					showItem: false
+				},
+				computed: {
+					item: function() {
+						if(this.topPannel==1){
+							return this.grade;
+						}else if(this.topPannel==2) {
+							return this.subject;
+						}else{
+							return {selected: 0, list: []};
+						}
+					},
+					gradeItem: function() {
+						var selected = this.grade.list?filterArray(this.grade.list, "percode", this.grade.selected)[0]:null;
+						return selected;
+					},
+					subjectItem: function() {
+						var selected = this.subject.list?filterArray(this.subject.list, "subcode", this.subject.selected)[0]:null;
+						return selected;
+					}
+				},
+				methods: {
+					//显示头部选项
+					showTopPannel: function(type) {
+						if(this.topPannel==type&&this.showItem) {
+							this.showItem = false;
+							mask.close();
+						}else{
+							this.showItem = true;
+							this.topPannel = type;
+							mask.show();
+						}
+					},
+					// 设置目录
+					setMenu: function(data) {
+						console.log("设置目录");
+						testMenu.isLoaded = false;
+						plus.nativeUI.showWaiting();
+						var _this = this;
+						//获取目录
+						commonAjax("/Ycyx/Practice/index", {
+							data: data||{},
+							timeout: 5000,
+							type: 'post',
+							success: function(res){
+								var rdata = JSON.parse(res.data);
+								//科目
+								_this.subject = {
+									selected: rdata.subcode,
+									list: rdata.subs||[]
+								};
+								//学段
+								_this.grade = {
+									selected: rdata.percode,
+									list: rdata.pers||[]
+								}
+								//设置test-menu目录
+								testMenu.menu = rdata.catalogs;
+								testMenu.isLoaded = true;
+								_this.$nextTick(function(){
+									plus.nativeUI.closeWaiting();
+								});
+							},
+							fail: function(res){
+								plus.nativeUI.closeWaiting();
+							},
+							error: function(){
+								plus.nativeUI.closeWaiting();
+							}
+						});
+					},
+					//打开个人中心
+					openCenter: function(){
+						if(!center) return;
+						center.show("slide-in-left", 150);
+						//主窗体开始侧滑；
+						self.setStyle({
+							left: '70%',
+							mask:"rgba(0,0,0,0.35)",
+							transition: {
+								duration: 150
+							}
+						});
+					},
+					//选择选项
+					selectItem: function(){
+						this.showItem = false;
+						mask.close();
+						this.$nextTick(function () {
+							if(this.topPannel==1){
+								this.setMenu({percode: this.grade.selected});
+							}else if(this.topPannel==2){
+								this.setMenu({percode: this.grade.selected, subcode: this.subject.selected});
+							}
+						});
+					}
+				}
 			});
 			
 			//知识点目录
@@ -604,13 +620,12 @@
 							timeout: 5000,
 							success: function(res) {
 //								console.log(res);
-//								var test_start = plus.webview.getWebviewById("bl-test-start");
-//								mui.fire(test_start, "getData", {
-//									title: model.name, 
-//									catalogId: model.id,
-//									difficulty: JSON.parse(res.data).schedule.difficulty_level_id
-//								});
-//								test_start.show();
+								mui.fire(test_start, "getData", {
+									title: model.name, 
+									catalogId: model.id,
+									difficulty: JSON.parse(res.data).schedule.difficulty_level_id
+								});
+								test_start.show("slide-in-right");
 								plus.nativeUI.closeWaiting();
 							},
 							fail: function(res) {
@@ -627,11 +642,10 @@
 			//学情分析
 			var subRadar;
 			var analysis = new Vue({
-				el: "#analysis",
+				el: "#analysisTab",
 				data: {
 					user_name: "",
 					alsList: [],
-					isNeedPain: true,
 					isShowed: false
 				},
 				mounted: function() {
@@ -640,7 +654,7 @@
 				methods: {
 					goDetail: function(item) {
 						mui.openWindow({
-							url:"analysis-detail.html",
+							url:"analysisDetail.html",
 							id: "bl-analysis-detail",
 							extras: {
 								subcode: item.subcode,
@@ -653,12 +667,15 @@
 			
 			//获取分析数据
 			function getAnalysisData() {
+				plus.nativeUI.showWaiting();
 				commonAjax("/Ycyx/Analysis/index", {
 					success: function(res){
+						console.log(res.data);
 						var res_data = JSON.parse(res.data);
 						analysis.alsList = res_data.analysis;
 						getSubRadar();
-						analysis.isNeedPain = false;
+						if(!analysis.isShowed) analysis.isShowed = true;
+						plus.nativeUI.closeWaiting();
 					}
 				});
 			}
@@ -728,6 +745,7 @@
 				});
 			}
 			
+//			analysis.alsList = [{"subname":"语文","count":52,"subcode":"01","remark":"-1","avg_score":14},{"subname":"语文","count":52,"subcode":"01","remark":"0","avg_score":14}];
 			
 		</script>
 	</body>

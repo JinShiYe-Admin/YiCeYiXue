@@ -16,6 +16,10 @@ body {
 .mui-icon .svg-icon {
 	vertical-align: middle;
 }
+.mui-bar-tab .mui-tab-item .mui-icon {
+	width: auto;
+	height: auto;
+}
 input {
 	-webkit-tap-highlight-color:transparent;
 	-webkit-touch-callout: none;
@@ -51,6 +55,13 @@ body, .mui-content {
 	height: auto;
 	min-height: 0.84rem;
 	box-sizing: content-box;
+	padding-top: 0.4rem;
+}
+.mui-bar-nav~.mui-content {
+	padding-top: 1.24rem;
+}
+.mui-bar-tab~.mui-content {
+	padding-bottom: 1rem;
 }
 .mui-bar-nav .mui-icon {
 	font-size: 0.24rem;
@@ -92,9 +103,9 @@ body, .mui-content {
 .mui-bar-nav.blue a, .mui-bar-nav.blue .mui-title {
 	color: #FFFFFF;
 }
-
-.mui-bar-nav~.mui-content {
-	padding-top: 0.84rem;
+.mui-col-sm-2-5 {
+	float: left;
+	width: 20%;
 }
 
 .option-label {
@@ -109,12 +120,10 @@ body, .mui-content {
     align-items: center;
 }
 .option-wrap {
-	margin-right: -0.82rem;
 	margin-bottom: -0.4rem;
+	text-align: center;
 }
 .option-wrap .option-label {
-	float: left;
-	margin-right: 0.82rem;
 	margin-bottom: 0.4rem;
 }
 .option-label.selected {
@@ -255,6 +264,23 @@ ul li.navigate-right:before {
 .sub-list li .msg {
 	color: #666666;
 	font-size: 86%;
+}
+
+.net-error-box {
+	margin-top: 35%;
+	text-align: center;
+	font-size: .28rem;
+}
+.net-error-box .icon {
+	width: 3rem;
+	height: 3rem;
+}
+.net-error-box button {
+	height: 0.72rem;
+	border-radius: 0.36rem;
+	color: #FFFFFF;
+	background-color: #3DADEF;
+	border: none;
 }
 
 
@@ -420,7 +446,9 @@ ul li.navigate-right:before {
 .mui-icon-extra-outline:before { content: "\e606"; }
 
 
+/*自适应*/
 @media only screen and (min-width: 320px) {
+	html {font-size: 43px;}
 	#subRadar {
 		height: 205px;
 	}
@@ -429,6 +457,7 @@ ul li.navigate-right:before {
 	}
 }
 @media only screen and (min-width: 375px) {
+	html {font-size: 50px;}
 	#subRadar {
 		height: 220px;
 	}
@@ -437,25 +466,28 @@ ul li.navigate-right:before {
 	}
 }
 @media only screen and (min-width: 400px) {
+	html {font-size: 53px;}
 	#subRadar {
 		height: 235px;
-	}
-	.option-label {
-		border: 2px solid #000000;
 	}
 	.score-bar {
 		border: 6px solid #FECE00;
 	}
 }
 @media only screen and (min-width: 425px) {
+	html {font-size: 57px;}
 	#subRadar {
 		height: 250px;
 	}
 	#testLine {
 		height: 226px;
 	}
+	.option-label {
+		border-width: 2px;
+	}
 }
 @media only screen and (min-width: 640px) {
+	html {font-size: 85px;}
 	#subRadar {
 		height: 375px;
 	}
@@ -466,6 +498,7 @@ ul li.navigate-right:before {
 	.label-wrapper .done-box.icon-true {border-radius: 4px;}
 }
 @media only screen and (min-width: 750px) {
+	html {font-size: 100px;}
 	#subRadar {
 		height: 440px;
 	}

@@ -1,6 +1,6 @@
 <!doctype html>
 <html>
-
+	<!--测试、查看测试结果-->
 	<head>
 		<meta charset="utf-8">
 		<title></title>
@@ -166,7 +166,7 @@
 							return false;
 						}else{
 							if(self.isTested){
-								return true; //预加载的页面，返回时自动隐藏
+								plus.navigator.setStatusBarStyle('light');
 							}else{
 								plus.navigator.setStatusBarStyle('light');
 								self.close(); //返回时,关闭页面
@@ -178,67 +178,82 @@
 				
 				self = plus.webview.currentWebview();
 				
-				testing.headerTitle = self.title;
-				
 				//状态栏样式
 				self.addEventListener("show", function(e){
-					if(!testing.isBack) {
+//					if(!testing.isBack) {
 						plus.navigator.setStatusBarStyle('dark');
-					}
+//					}
 				});
-				self.addEventListener("hide", function(e){
-					plus.navigator.setStatusBarStyle('light');
-				});
+//				self.addEventListener("hide", function(e){
+//					plus.navigator.setStatusBarStyle('light');
+//				});
 				
 				// 获取题目
 				testing.isTested = self.isTested;
+				testing.headerTitle = self.title; //知识点名
 				if(self.isTested) { 
 					//测试结果
-					console.log(JSON.stringify(self.detailInfo));
+					console.log("测试结果: "+JSON.stringify(self.detailInfo));
 					testing.paperName = self.paperName;
 					testing.questions = self.detailInfo;
 					testing.time = self.used_time;
 				}else{ 
 					//新测试
-					plus.nativeUI.showWaiting();
-					commonAjax("/Ycyx/Practice/createPaper", {
-						data: {
-							catalogId: self.catalogId
-						},
-						success: function(res){
-							console.log(res);
-							var data = JSON.parse(res.data);
-							if(data.questions&&data.questions.length){
-								testing.paperName = data.paperName;
-								testing.questions = data.questions;
-								testing.diskey = data.diskey;
-								//计时
-								testing.timer();
-							}else{
-								plus.nativeUI.toast( "没有题目");
-								testing.isBack = true;
-								mui.back();
-							}
-							plus.nativeUI.closeWaiting();
-						},
-						fail: function(){
-							plus.nativeUI.closeWaiting();
-						},
-						error: function(){
-							plus.nativeUI.closeWaiting();
-						}
-					});
+//					plus.nativeUI.showWaiting();
+//					commonAjax("/Ycyx/Practice/createPaper", {
+//						data: {
+//							catalogId: self.catalogId
+//						},
+//						success: function(res){
+//							console.log(res);
+//							var data = JSON.parse(res.data);
+//							if(data.questions&&data.questions.length){
+//								testing.paperName = data.paperName;
+//								testing.questions = data.questions;
+//								testing.diskey = data.diskey;
+//								//计时
+//								testing.timer();
+//							}else{
+//								plus.nativeUI.toast( "没有题目");
+//								testing.isBack = true;
+//								mui.back();
+//							}
+//							plus.nativeUI.closeWaiting();
+//						},
+//						fail: function(){
+//							plus.nativeUI.closeWaiting();
+//						},
+//						error: function(){
+//							plus.nativeUI.closeWaiting();
+//						}
+//					});
+					if(self.opener().id=="bl-test-start") {
+						self.opener().hide();
+					}
+					testing.paperName = self.data.paperName;
+					testing.questions = self.data.questions;
+					testing.diskey = self.data.diskey;
+					//计时
+					testing.timer();
 				}
 				
 			});
 			
-			//继续测试的结果
-			window.addEventListener("reTested", function(e){
-				if(self.isTested) {
-					console.log(JSON.stringify(e.detail.detailInfo));
-					testing.paperName = e.detail.paperName;
-					testing.questions = e.detail.detailInfo;
-					testing.time = e.detail.used_time;
+			//设置测试结果
+			window.addEventListener("setTested", function(e){
+				console.log("测试结果: "+JSON.stringify(e.detail.detailInfo));
+				testing.isTested = true;
+				testing.headerTitle = self.title;
+				testing.paperName = e.detail.paperName;
+				testing.questions = e.detail.detailInfo;
+				testing.time = e.detail.used_time;
+			});
+			
+			//返回查看
+			window.addEventListener("getBack", function(e){
+				testing.index = e.detail.index||0;
+				if(!testing.isTested) {
+					testing.timer();
 				}
 			});
 			
@@ -255,7 +270,7 @@
 					isSelecting: false,
 					diskey: "",
 					isAnswered: false,
-					isBack: false
+//					isBack: false
 				},
 				computed: {
 					//时间显示
@@ -334,7 +349,7 @@
 							});
 							//进入提交页
 							mui.openWindow({
-								url: "test-submit.html",
+								url: "testSubmit.html",
 								id: "bl-test-submit",
 								extras: {
 									submitData: {
@@ -391,14 +406,6 @@
 					getAnswerName: function(answer) {
 						return answer?answer.match(/[a-zA-Z]/)[0]:answer;
 					}
-				}
-			});
-			
-			//监听返回
-			window.addEventListener("getBack", function(e){
-				testing.index = e.detail.index||0;
-				if(!testing.isTested) {
-					testing.timer();
 				}
 			});
 			
