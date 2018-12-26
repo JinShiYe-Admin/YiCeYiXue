@@ -106,7 +106,7 @@
 								var res_data = JSON.parse(res.data);
 								//结果页
 								var bl_result = plus.webview.getWebviewById('bl-test-result');
-								if(bl_result){
+								if(bl_result&&mui.os.android){
 									mui.fire(bl_result, "resubmit", {
 										report: res_data.report,
 										detailInfo: res_data.detailInfo,

@@ -1,44 +1,4 @@
 
-//var REM = parseFloat(localStorage.getItem("REM"));
-//if(REM){
-//	document.documentElement.style.fontSize = REM + 'px';
-//	setNavHeight();
-//}else{
-//	setRem(document, window);
-//}
-
-//设置rem, 在750px宽的设备中1rem = 100px
-//function setRem(doc, win) {
-//	var docEl = doc.documentElement,
-//		resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
-//		recalc = function() {
-//			var clientWidth = docEl.clientWidth;
-//			if(!clientWidth) return;
-//			if(clientWidth > 750) clientWidth = 750;
-//			REM = 100 * (clientWidth / 750);
-//			docEl.style.fontSize = REM + 'px'; //1rem = 100px
-//			localStorage.setItem("REM", REM);
-//			setNavHeight();
-//		};
-//	if(!doc.addEventListener) return;
-//	win.addEventListener(resizeEvt, recalc, false);
-//	doc.addEventListener('DOMContentLoaded', recalc, false);
-//}
-
-////沉浸式状态栏
-//function setNavHeight() {
-//	var statusbarHeight = parseFloat(localStorage.getItem("statusbarHeight"));
-//	var nav = document.querySelector(".mui-bar-nav");
-//	if(nav&&statusbarHeight) {
-//		nav.style.paddingTop = statusbarHeight+"px";
-//		var content = document.querySelector(".mui-bar-nav~.mui-content");
-//		if(content) {
-//			content.style.paddingTop = nav.offsetHeight? nav.offsetHeight+"px" : (0.84*REM + statusbarHeight)+"px";
-//		}
-//	}
-//}
-
-
 // 获取套餐学段名
 function getPrdName(fx) {
 	var names = [];
@@ -59,7 +19,7 @@ function getPrdName(fx) {
 function commonAjax(url, ops) {
 	if(plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
 		mui.toast("网络异常，请检查网络设置！");
-		netErrorTip();
+		pageError();
 		plus.nativeUI.closeWaiting();
 		return false;
 	}
@@ -67,9 +27,15 @@ function commonAjax(url, ops) {
 	sendAjax(window.storageKeyName.YCYXHOST+url, ops, times);
 }
 function sendAjax(url, ops, times) {
-	//ops.data = ;
+	var publicParameter = store.get(window.storageKeyName.PUBLICPARAMETER);
+	var personal = store.get(window.storageKeyName.PERSONALINFO);
+	var data = mui.extend(ops.data, {
+		token: personal.utoken,
+		uuid: publicParameter.uuid,
+		uid: personal.uid
+	});
 	mui.ajax(url, {
-		data: ops.data,
+		data: data,
 		type: ops.type||"post",
 		timeout: ops.timeout||6000,
 		dataType: 'json',
@@ -78,10 +44,8 @@ function sendAjax(url, ops, times) {
 				ops.success && ops.success(res);
 			}else{
 				if(res.code==6){
-					console.log("token reset");
 					//续订令牌
-					var publicParameter = store.get(window.storageKeyName.PUBLICPARAMETER);
-					var personal = store.get(window.storageKeyName.PERSONALINFO);
+					console.log("token reset");
 					//需要参数
 					var comData = {
 						uuid: publicParameter.uuid,
@@ -137,7 +101,7 @@ document.addEventListener("netchange", function(){
 	}
 }, false);
 
-function netErrorTip() {
+function pageError(el, callback) {
 	var net_abort_html = '<div class="net-error-box">'+
 		'<svg class="icon" aria-hidden="true"><use xlink:href="#icon-icon-net-error"></use></svg>'+
 		'<div style="padding: 0.14rem;">页面加载异常，点击重试</div>'+

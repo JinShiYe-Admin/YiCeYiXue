@@ -180,13 +180,8 @@
 				
 				//状态栏样式
 				self.addEventListener("show", function(e){
-//					if(!testing.isBack) {
-						plus.navigator.setStatusBarStyle('dark');
-//					}
+					plus.navigator.setStatusBarStyle('dark');
 				});
-//				self.addEventListener("hide", function(e){
-//					plus.navigator.setStatusBarStyle('light');
-//				});
 				
 				// 获取题目
 				testing.isTested = self.isTested;

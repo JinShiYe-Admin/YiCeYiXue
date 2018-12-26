@@ -130,20 +130,22 @@
 				vertical-align: middle;
 			}
 			ul.als-list li .sub .label {
-				display: inline-block;
+				display: inline-flex;
+			    justify-content: center;
+			    align-items: center;
 				font-size: 75%;
 				border: 1px solid #25AE38;
 				color: #25AE38;
 				border-radius: 2px;
 				width: .6rem;
 				height: .32rem;
-				line-height: .32rem;
-				text-align: center;
 				margin-left: -0.8rem;
 				margin-right: 0.2rem;
 				vertical-align: middle;
 				margin-top: -3px;
-				padding-top: 1px;
+			}
+			.mui-android .als-list li .sub .label {
+				padding-top: 2px;
 			}
 			ul.als-list li .sub .label.bad {
 				color: #DB4848;
@@ -175,7 +177,7 @@
 	<body>
 		<header id="header" class="mui-bar mui-bar-nav blue">
 			<a v-show="!title" class="mui-icon mui-pull-right grade" @tap.stop="showTopPannel(1)" v-cloak>{{gradeItem?gradeItem.pername:"学段"}}<span class="mui-icon-arrowdown"></span></a>
-			<!--<a class="mui-icon mui-pull-left" @tap="openCenter">
+			<!--<a id="headImg" class="mui-icon mui-pull-left" @tap="openCenter">
 				<img v-if="headImg" :src="headImg" class="head-img"/>
 				<svg v-else class="svg-icon" aria-hidden="true">
 		            <use xlink:href="#mine" />
@@ -344,15 +346,6 @@
 			//认证信息
 			var userInfo = store.get(window.storageKeyName.PERSONALINFO);
 			var deviceParam = store.get(window.storageKeyName.PUBLICPARAMETER);
-//			var auth = {
-//				uuid: deviceParam.uuid,
-//				utid: userInfo.utid,
-//				schid: userInfo.schid,
-//				utname: userInfo.utname,
-//				token: userInfo.utoken
-//			}
-			console.log("userInfo: ", userInfo);
-			console.log("deviceParam: ", deviceParam);
 			
 			var mask = mui.createMask(function(){
 				header.showItem = false;
@@ -365,10 +358,27 @@
 				//禁止横屏
 				plus.screen.lockOrientation("portrait-primary");
 				
-				// 获取目录
+				//最初数据， 获取目录
 				header.setMenu();
 				
-				//退出
+				//开始测试页
+				test_start = mui.preload({
+					url: 'testStart.html',
+					id: 'bl-test-start'
+				});
+				
+				// 刷新数据
+				window.addEventListener("refresh", function(e){
+					if(activeTab=="bl-analysis"){
+						getAnalysisData();
+					}else{
+						analysis.isShowed = false;
+					}
+					var als_detail = plus.webview.getWebviewById('bl-analysis-detail');
+					als_detail && mui.fire(als_detail, "refresh");
+				});
+				
+				//双击退出
 				var backButtonPress = 0;
 				mui.back = function(event) {
 					backButtonPress++;
@@ -383,90 +393,67 @@
 					return false;
 				};
 				
-				//开始测试页
-				test_start = mui.preload({
-					url: 'testStart.html',
-					id: 'bl-test-start'
-				});
-				
-				//个人中心
-				center = mui.preload({
-					url: '../center/mine.html',
-					id: 'bl-mine',
-					styles: {
-						left: 0,
-						width: '70%'
-					}
-				});
-				//关闭时，主页转回
-				center.addEventListener("hide", function(){
-					self.setStyle({mask: 'none'});
-					self.setStyle({
-							left: '0',
-							transition: {
-								duration: 150
-							}
-						});
-				});
-				//点击遮罩层，关闭个人中心
-				self.addEventListener("maskClick", function(){
-					center.hide();
-				});
-				
-				
-//				getUserBusFunc();
-				//用户已订购套餐及功能扩展栏目
-				function getUserBusFunc() {
-					var enData1 = {};
-					//不需要加密的数据
-					var comData1 = {
-						uuid: deviceParam.uuid, //用户设备号
-						uid: userInfo.uid, //用户账号
-						utoken: userInfo.utoken, //用户令牌
-						appid: deviceParam.appid //系统所分配的应用ID
-					}
-					plus.nativeUI.showWaiting();
-					//发送网络请求，data为网络返回值
-					postDataEncry('GetUserBusFunc', enData1, comData1, 0, function(data1) {
-						console.log('GetUserBusFunc:' + JSON.stringify(data1));
-						plus.nativeUI.closeWaiting();
-						if(data1.RspCode == 0) {
-							if(data1.RspData) {
-								userInfo.packageCount = data1.RspData.userbus.length; //套餐是否绑定学生
-								store.set(window.storageKeyName.PERSONALINFO, userInfo);
-								if(userInfo.packageCount > 0 ) {
-									
-								} else {
-									
-								}
-							} else {
-								userInfo.packageCount = 0; //套餐是否绑定学生
-								store.set(window.storageKeyName.PERSONALINFO, userInfo);
-//								contentData.showFlag = 1;
-							}
-						} else {
-							mui.toast(data1.RspTxt);
+				var head_img = document.getElementById("headImg");
+				//有个人中心时
+				if(head_img) {
+					//预加载个人中心
+					center = mui.preload({
+						url: '../center/mine.html',
+						id: 'bl-mine',
+						styles: {
+							left: 0,
+							width: '70%'
 						}
 					});
+					
+					self.addEventListener("maskClick", function(){
+						center.evalJS("mui.back();");
+					});
+					
+					//修改头像
+					window.addEventListener("home_setHeadImg", function(e){
+						header.headImg = e.detail.imgurl;
+					});
+					
+					//用户已订购套餐及功能扩展栏目
+					function getUserBusFunc() {
+						var enData1 = {};
+						//不需要加密的数据
+						var comData1 = {
+							uuid: deviceParam.uuid, //用户设备号
+							uid: userInfo.uid, //用户账号
+							utoken: userInfo.utoken, //用户令牌
+							appid: deviceParam.appid //系统所分配的应用ID
+						}
+						plus.nativeUI.showWaiting();
+						//发送网络请求，data为网络返回值
+						postDataEncry('GetUserBusFunc', enData1, comData1, 0, function(data1) {
+							console.log('GetUserBusFunc:' + JSON.stringify(data1));
+							plus.nativeUI.closeWaiting();
+							if(data1.RspCode == 0) {
+								if(data1.RspData) {
+									userInfo.packageCount = data1.RspData.userbus.length; //套餐是否绑定学生
+									store.set(window.storageKeyName.PERSONALINFO, userInfo);
+									if(userInfo.packageCount > 0 ) {
+										
+									} else {
+										
+									}
+								} else {
+									userInfo.packageCount = 0; //套餐是否绑定学生
+									store.set(window.storageKeyName.PERSONALINFO, userInfo);
+	//								contentData.showFlag = 1;
+								}
+							} else {
+								mui.toast(data1.RspTxt);
+							}
+						});
+					}
+					
 				}
 				
-				// 刷新数据
-				window.addEventListener("refresh", function(e){
-					if(activeTab=="bl-analysis"){
-						getAnalysisData();
-					}else{
-						analysis.isShowed = false;
-					}
-					var als_detail = plus.webview.getWebviewById('bl-analysis-detail');
-					als_detail && mui.fire(als_detail, "refresh");
-				});
-				
-				//修改头像
-				window.addEventListener("home_setHeadImg", function(e){
-					header.headImg = e.detail.imgurl;
-				});
-				
 			});
+			
 			
 			//底部导航切换
 			var activeTab = "bl-test-menu";
@@ -558,7 +545,7 @@
 									list: rdata.pers||[]
 								}
 								//设置test-menu目录
-								testMenu.menu = rdata.catalogs;
+								testMenu.menu = rdata.catalogs||[];
 								testMenu.isLoaded = true;
 								_this.$nextTick(function(){
 									plus.nativeUI.closeWaiting();
@@ -620,10 +607,11 @@
 							timeout: 5000,
 							success: function(res) {
 //								console.log(res);
+								var res_data = JSON.parse(res.data);
 								mui.fire(test_start, "getData", {
 									title: model.name, 
 									catalogId: model.id,
-									difficulty: JSON.parse(res.data).schedule.difficulty_level_id
+									difficulty: res_data.schedule?res_data.schedule.difficulty_level_id:1
 								});
 								test_start.show("slide-in-right");
 								plus.nativeUI.closeWaiting();
@@ -675,6 +663,12 @@
 						analysis.alsList = res_data.analysis;
 						getSubRadar();
 						if(!analysis.isShowed) analysis.isShowed = true;
+						plus.nativeUI.closeWaiting();
+					},
+					fail: function() {
+						plus.nativeUI.closeWaiting();
+					},
+					error: function() {
 						plus.nativeUI.closeWaiting();
 					}
 				});

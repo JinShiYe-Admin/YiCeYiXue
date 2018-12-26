@@ -61,7 +61,7 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav blue">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
 			<!--<a id='register' class="mui-icon mui-pull-right">注册</a>-->
 			<h1 class="mui-title">益测益学</h1>
 		</header>
@@ -121,7 +121,7 @@
 	<script type="text/javascript">
 //		setRem(document, window);
 		var tempModel = {};
-		var loginFlag = 0; //0自动登录，1不自动登录
+		var loginFlag = 1; //0自动登录，1不自动登录
 		mui.plusReady(function() {
 			//设置uuid(手机识别)与appid(APP识别)
 			tempModel = {
@@ -231,6 +231,7 @@
 			//发送网络请求，data为网络返回值
 			postDataEncry('ShakeHand', enData0, comData0, 0, function(data) {
 				console.log('ShakeHand成功');
+				console.log(JSON.stringify(data));
 				if(data.RspCode == 0) {
 					store.set(window.storageKeyName.SHAKEHAND, data.RspData);
 					//加密数据
@@ -304,9 +305,9 @@
 									permission = false;
 								}
 								if(permission) {
-									plus.webview.open('../btlearn/ycyxIndex.html', 'bl-index', 
-									{}, "auto", 200, function(){
-										plus.webview.currentWebview().close();
+									mui.openWindow({
+										url: '../btlearn/ycyxIndex.html',
+										id: 'bl-index'
 									});
 								}else{
 									mui.toast("此用户无登录权限");
@@ -324,13 +325,12 @@
 		}
 
 		var setUUID = function(tempStr) {
+			//获取个人信息
+			var personal = window.storageKeyName.PERSONALINFO?store.get(window.storageKeyName.PERSONALINFO):"";
+			console.log('personal: ', personal);
 			//自动登录
 			if(loginFlag == 0) {
 				//判断上次是否登录过，自动登录
-				//获取个人信息
-				var personal = window.storageKeyName.PERSONALINFO?store.get(window.storageKeyName.PERSONALINFO):"";
-				console.log('personal: ', personal);
-				
 				if(personal) {
 					if(personal.utid == 'undefined' || personal.utid == null || personal.userName0 == null) {
 						console.log("用户信息为空");
@@ -345,7 +345,12 @@
 					console.log("找不到用户");
 					//loginPro('00000000000', '000000');
 				}
-			} 
+			}else{
+				if(personal){
+					document.getElementById("account").value = personal.userName0;
+					document.getElementById("password").value = personal.password0;	
+				}
+			}
 			
 		}
 
