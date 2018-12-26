@@ -44,6 +44,13 @@ var storageKeyName = (function(mod) {
 			//本地：http://192.168.0.125:8080/yiceyixue; 开发：http://139.129.252.49:8080/yiceyixue;
 			mod.YCYXHOST = "http://192.168.0.125:8080/yiceyixue";
 			break;
+		
+		case 1://正式
+			mod.SCHOOLID = 100008;
+			mod.INTERFACEGU = ""; //用户信息接口
+			mod.YCYXHOST = "";//益测益学服务端地址
+			break;
+			
 		default:
 			break;
 	}
