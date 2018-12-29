@@ -357,6 +357,8 @@
 				self = plus.webview.currentWebview();
 				//禁止横屏
 				plus.screen.lockOrientation("portrait-primary");
+				//状态栏白色
+				plus.navigator.setStatusBarStyle('light');
 				
 				//最初数据， 获取目录
 				header.setMenu();
@@ -393,8 +395,8 @@
 					return false;
 				};
 				
-				var head_img = document.getElementById("headImg");
 				//有个人中心时
+				var head_img = document.getElementById("headImg");
 				if(head_img) {
 					//预加载个人中心
 					center = mui.preload({
@@ -556,6 +558,7 @@
 							},
 							error: function(){
 								plus.nativeUI.closeWaiting();
+								pageError();
 							}
 						});
 					},

@@ -62,6 +62,7 @@ function sendAjax(url, ops, times) {
 							personal.utoken = data1.RspData;
 							store.set(window.storageKeyName.PERSONALINFO, personal);
 							if(times>5) {
+								plus.nativeUI.closeWaiting();
 								plus.nativeUI.toast("令牌过期，请重新登录");
 							}else{
 								times++;
@@ -101,7 +102,7 @@ document.addEventListener("netchange", function(){
 	}
 }, false);
 
-function pageError(el, callback) {
+function pageError() {
 	var net_abort_html = '<div class="net-error-box">'+
 		'<svg class="icon" aria-hidden="true"><use xlink:href="#icon-icon-net-error"></use></svg>'+
 		'<div style="padding: 0.14rem;">页面加载异常，点击重试</div>'+
@@ -116,6 +117,7 @@ function reload() {
 
 //打开新测试页
 function newTest(catalogId, title) {
+	plus.nativeUI.showWaiting();
 	commonAjax("/Ycyx/Practice/createPaper", {
 		data: {
 			catalogId: catalogId
@@ -124,20 +126,36 @@ function newTest(catalogId, title) {
 //			console.log(res);
 			var data = JSON.parse(res.data);
 			if(data.questions&&data.questions.length){
-				mui.openWindow({
-					url: "testing.html",
-					id: "bl-testing",
-					extras: {
-						isTested: false,
-						catalogId: catalogId,
-						title: title,
-						data: data
-					}
+//				mui.openWindow({
+//					url: "testing.html",
+//					id: "bl-testing",
+//					extras: {
+//						isTested: false,
+//						catalogId: catalogId,
+//						title: title,
+//						data: data
+//					}
+//				});
+				var new_test = plus.webview.create( "testing.html", "bl-testing", {}, {
+					isTested: false,
+					catalogId: catalogId,
+					title: title,
+					data: data
 				});
-				
+				new_test.show("slide-in-right", 200, function(){
+					plus.nativeUI.closeWaiting();
+					plus.navigator.setStatusBarStyle('dark');
+				});
 			}else{
 				plus.nativeUI.toast( "没有题目");
+				plus.nativeUI.closeWaiting();
 			}
+		},
+		fail: function() {
+			plus.nativeUI.closeWaiting();
+		},
+		error: function() {
+			plus.nativeUI.closeWaiting();
 		}
 	});
 }

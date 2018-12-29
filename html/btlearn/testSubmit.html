@@ -50,7 +50,7 @@
 						</div>
 					</div>
 				</div>
-				<a class="btn-bottom" @tap="submit">提交</a>
+				<a class="btn-bottom" @tap.stop="submit">提交</a>
 			</div>
 		</div>
 		
@@ -88,6 +88,10 @@
 					},
 					//提交
 					submit: function() {
+//						var personal = store.get(window.storageKeyName.PERSONALINFO);
+//						personal.utoken = "jjsdkfk";
+//						store.set(window.storageKeyName.PERSONALINFO, personal);
+						
 						plus.nativeUI.showWaiting();
 						var sbData = self.submitData;
 						var answerJson = {};
@@ -106,12 +110,13 @@
 								var res_data = JSON.parse(res.data);
 								//结果页
 								var bl_result = plus.webview.getWebviewById('bl-test-result');
-								if(bl_result&&mui.os.android){
+								if(bl_result){
 									mui.fire(bl_result, "resubmit", {
 										report: res_data.report,
 										detailInfo: res_data.detailInfo,
 										nodeTitle: sbData.title
 									});
+									bl_result.show();
 								}else{
 									mui.openWindow({
 										url: "testResult.html",
@@ -123,6 +128,14 @@
 										}
 									});
 								}
+//								var test_result = plus.webview.create("testResult.html", "bl-test-result", {}, {
+//										report: res_data.report,
+//										detailInfo: res_data.detailInfo,
+//										nodeTitle: sbData.title
+//								});
+//								test_result.show("slide-in-right", 200, function(){
+//									plus.nativeUI.closeWaiting();
+//								});
 								plus.nativeUI.closeWaiting();
 								//刷新其他页面数据
 								mui.fire(plus.webview.getWebviewById('bl-index'), "refresh");

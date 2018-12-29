@@ -8,53 +8,44 @@
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
 		<style type="text/css">
-			.mui-content .banner {
-				margin-top: -100px;
-				height: 2.5rem; 
-				min-height: 200px;
+			.login-box {
+				padding: 0.3rem 0.15rem;
 			}
-			.mui-input-row {
-				padding: 0.5rem 0.8rem 0.25rem;
-			}
-			.mui-input-row > hr {
-				width: 100%;
-				border: none;
-    			border-top: 1px solid #A4A3A3;
-			}
-			.mui-input-row .mui-icon {
-				font-size: 0.46rem;
+			.login-box .mui-input-row {
+				margin-bottom: 0.2rem;
+				padding-bottom: 5px;
 			}
 			.mui-input-row label {
-				width: 25%;
+				width: 15%;
+				padding-right: 0;
+			}
+			.mui-input-row label .icon {
+				font-size: 18px;
 				color: #A4A3A3;
-				padding: 0.24rem 0.16rem 0.24rem 0.24rem;
 			}
 			.mui-input-row label~input {
-				width: 75%;
-				padding: 0.24rem 0.16rem;
-				height: 1rem;
-				min-height: 43px;
-				font-size: 0.3rem;
+				font-size: 14px;
+				width: 84%;
 			}
-			.mui-input-row .mui-input-clear~.mui-icon-clear {
-				top: 0.5rem;
-				right: 0.4rem;
-				height: 1rem;
-				line-height: 1rem;
-				font-size: 0.4rem;
+			.mui-input-row:after {
+				position: absolute;
+				right: 15px;
+				bottom: 0;
+				top: 96%;
+				left: 15px;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #c8c7cc;
 			}
-			.login-btn {
-				height: .88rem;
-				min-height: 38px;
-				line-height: .88rem;
-				border-radius: .44rem;
-				font-size: 0.32rem;
+			#login {
+				height: 44px;
+				line-height: 44px;
+				border-radius: 22px;
+				font-size: 16px;
 				width: 100%;
 				padding: 0;
-				margin-bottom: 0.8rem;
-			}
-			#register {
-				font-size: 0.28rem;
 			}
 		</style>
 	</head>
@@ -66,38 +57,33 @@
 			<h1 class="mui-title">益测益学</h1>
 		</header>
 		<div class="mui-content">
-			<div class="banner"></div>
-			<div class="mui-input-row">
-				<label>
-					<span class="mui-icon">
-						<svg class="svg-icon" aria-hidden="true">
-				            <use xlink:href="#icon_account" />
-				        </svg>
-					</span>
-				</label>
-				<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入用户名">
-				<hr/>
-			</div>
-			<div class="mui-input-row">
-				<label>
-					<span class="mui-icon">
-						<svg class="svg-icon" aria-hidden="true">
-				            <use xlink:href="#icon_password" />
-				        </svg>
-					</span>
-				</label>
-				<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
-				<hr/>
-			</div>
-
-			<div class="mui-input-row" style="padding-top: 1rem;">
-				<button id='login' type="button" class="login-btn btn-theme">登录</button>
-				<!--<button id='register' type="button" class="login-btn btn-theme-border">注册</button>-->
+			<div class="login-box" id="loginBox">
+				<div class="mui-input-row">
+					<label>
+						<svg class="icon" aria-hidden="true">
+						  	<use xlink:href="#icon_account"></use>
+						</svg>
+					</label>
+					<input id='account' type="text" class="mui-input-clear mui-input" v-model="tempName" placeholder="请输入用户名">
+				</div>
+	
+				<div class="mui-input-row">
+					<label>
+						<svg class="icon" aria-hidden="true">
+						  	<use xlink:href="#icon_password"></use>
+						</svg>
+					</label>
+					<input id='password' type="password" class="mui-input-clear mui-input" v-model="tempPW" placeholder="请输入密码">
+				</div>
+	
+				<div style="padding: 15px;">
+					<button id='login' type="button" class="mui-btn btn-theme" :class="{'mui-disabled': !isInput}" @click="login">登录</button>
+				</div>
 			</div>
 		</div>
 	</body>
 	<script src="../../js/mui.min.js"></script>
-	<!--<script type="text/javascript" src="../../js/vue.js" ></script>-->
+	<script type="text/javascript" src="../../js/vue.js" ></script>
 	<!--<script type="text/javascript" src="../../js/vconsole.min.js" ></script>-->
 	<script src='../../js/jquery.min.js'></script>
 	
@@ -119,10 +105,11 @@
 	
 	<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
 	<script type="text/javascript">
-//		setRem(document, window);
-		var tempModel = {};
 		var loginFlag = 1; //0自动登录，1不自动登录
 		mui.plusReady(function() {
+			plus.webview.currentWebview().setStyle({
+		        softinputMode: "adjustResize"
+		    });
 			//设置uuid(手机识别)与appid(APP识别)
 			tempModel = {
 				uuid: plus.device.uuid,
@@ -140,20 +127,6 @@
 			//自动登录
 			setUUID();
 			
-//			document.addEventListener("netchange", wainshow, false);
-//			function wainshow() {
-//				if(plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
-//					mui.toast("网络异常，请检查网络设置！");
-//				} else {
-//					mui.toast("已接入网络");
-//					//判断上次有没有登录，如果登录，就不执行登录协议
-//					if(loginFlag == 0) {
-//						loginFlag = 1;
-//						setUUID();
-//					}
-//				}
-//			}
-			
 			var backButtonPress = 0;
 			mui.back = function(event) {
 				backButtonPress++;
@@ -168,36 +141,49 @@
 				return false;
 			};
 			
-			//沉浸式，保存状态栏高度
-//			if(plus.navigator.isImmersedStatusbar()) {
-//				var statusbarHeight = plus.navigator.getStatusbarHeight();
-//				localStorage.setItem("statusbarHeight", statusbarHeight);
-//				var nav = document.querySelector(".mui-bar-nav");
-//				if(nav) {
-//					nav.style.paddingTop = statusbarHeight+"px";
-//					var content = document.querySelector(".mui-bar-nav~.mui-content");
-//					if(content) content.style.paddingTop = nav.offsetHeight+"px";
-//				}
-//			}
-			
 		});
-
-		document.getElementById("login").addEventListener('tap', function(event) {
-			console.log("登录");
-			var tempName = document.getElementById("account").value;
-			var tempPW = document.getElementById("password").value;
-			
-			//判断输入是否符合要求
-			if(checkInput(tempName) && checkInput(tempPW)) {
-				//login登录
-				loginPro(tempName, tempPW);
+		
+		var loginBox = new Vue({
+			el: "#loginBox",
+			data: {
+				tempName: "",
+				tempPW: ""
+			},
+			computed: {
+				isInput: function() {
+					return this.tempName||this.tempPW
+				}
+			},
+			methods: {
+				login: function() {
+					console.log("登录");
+					//判断输入是否符合要求
+					if(checkInput(this.tempName) && checkInput(this.tempPW)) {
+						loginPro(this.tempName, this.tempPW);//login登录
+					}
+				}
+			}
+		});
+		//监听清除按钮
+		$("#loginBox").on("tap",".mui-icon-clear", function(){
+			var input = $(this).siblings('input');
+			switch(input.attr('id')) {
+				case 'account':
+					loginBox.tempName = "";
+					break;
+				case 'password':
+					loginBox.tempPW = "";
+					break;
 			}
 		});
 		
-//		document.getElementById("register").addEventListener('tap', function (event) {
-//	        console.log("注册");
-//	        mui.openWindow({url: 'register.html'});
-//	    });
+		//注册
+		var register = document.getElementById("register");
+		if(register) {
+			register.addEventListener('tap', function (event) {
+		        mui.openWindow({url: 'register.html'});
+		    });
+		}
 
 		window.addEventListener('quit', function(data) {
 			loginFlag = 1;
@@ -231,7 +217,6 @@
 			//发送网络请求，data为网络返回值
 			postDataEncry('ShakeHand', enData0, comData0, 0, function(data) {
 				console.log('ShakeHand成功');
-				console.log(JSON.stringify(data));
 				if(data.RspCode == 0) {
 					store.set(window.storageKeyName.SHAKEHAND, data.RspData);
 					//加密数据
@@ -276,21 +261,6 @@
 							store.set(window.storageKeyName.PERSONALINFO, data1.RspData);
 							var personal = store.get(window.storageKeyName.PERSONALINFO);
 							console.log('已保存personal: ' + JSON.stringify(personal));
-							
-							//绑定
-//							var info = plus.push.getClientInfo();//获取客户端推送标识信息
-//							var tempBindData = {
-//								appId: info.appid,
-//								alias: data1.RspData.utid,
-//								cid: info.clientid
-//							}
-//							bindPro(tempBindData, function function_name(data) {
-//								if(data.RspCode == 0) {
-//									console.log("绑定成功");
-//								}else{
-//									console.log(data.RspTxt);
-//								}
-//							});
 
 							//如果密码为1--6，让修改密码后，进入主界面
 							if(personal.password0 == '123456') {
@@ -310,7 +280,7 @@
 										id: 'bl-index'
 									});
 								}else{
-									mui.toast("此用户无登录权限");
+									mui.toast("您没有登录权限");
 								}
 							}
 						} else {
@@ -325,33 +295,16 @@
 		}
 
 		var setUUID = function(tempStr) {
-			//获取个人信息
-			var personal = window.storageKeyName.PERSONALINFO?store.get(window.storageKeyName.PERSONALINFO):"";
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
 			console.log('personal: ', personal);
+			if(personal) {
+				loginBox.tempName = personal.userName0;
+				loginBox.tempPW = personal.password0;
+			}
 			//自动登录
 			if(loginFlag == 0) {
-				//判断上次是否登录过，自动登录
-				if(personal) {
-					if(personal.utid == 'undefined' || personal.utid == null || personal.userName0 == null) {
-						console.log("用户信息为空");
-						//loginPro('00000000000', '123');
-					} else {
-						document.getElementById("account").value = personal.userName0;
-						document.getElementById("password").value = personal.password0;
-						//login登录
-						loginPro(personal.userName0, personal.password0);
-					}
-				} else {
-					console.log("找不到用户");
-					//loginPro('00000000000', '000000');
-				}
-			}else{
-				if(personal){
-					document.getElementById("account").value = personal.userName0;
-					document.getElementById("password").value = personal.password0;	
-				}
+				loginBox.login();
 			}
-			
 		}
 
 		//判断是否输入了值

@@ -181,11 +181,18 @@
 			
 			mui.init({
 				beforeback: function() {
+					//关闭提交页
+					var bl_submit = plus.webview.getWebviewById('bl-test-submit');
+					bl_submit && bl_submit.close('none');
+					//关闭开始页
+					var test_start = plus.webview.getWebviewById('bl-test-start');
+					test_start && test_start.hide("none");
+					//关闭测试页 
+					var bl_testing = plus.webview.getWebviewById('bl-testing');
+					bl_testing && bl_testing.close('none');
 					//echarts 重新绘图
 					var als_detail = plus.webview.getWebviewById('bl-analysis-detail');
 					als_detail && mui.fire(als_detail, "rePain");
-//					tested && tested.close('none');
-//					self && self.close();
 				}
 			});
 			
@@ -232,26 +239,15 @@
 					},
 					//继续学习
 					newTest: function() {
-//						mui.openWindow({
-//							url: "testing.html",
-//							id: "bl-testing",
-//							extras: {
-//								isTested: false,
-//								catalogId: self.report.book_catalog_id,
-//								title: self.nodeTitle
-//							}
-//						});
+						//关闭提交页
+						var bl_submit = plus.webview.getWebviewById('bl-test-submit');
+						bl_submit && bl_submit.close('none');
 						newTest(self.report.book_catalog_id, self.nodeTitle);
 					}
 				}
 			});
 			
 			function setResult(report, detail, nodeTitle) {
-				//关闭 testing 与 submit
-				var bl_testing = plus.webview.getWebviewById('bl-testing');
-				bl_testing && bl_testing.close('none');
-				var bl_submit = plus.webview.getWebviewById('bl-test-submit');
-				bl_submit && bl_submit.close('none');
 				
 				//结果数据，从上一级webview传来
 				testResult.reportName = report.name;

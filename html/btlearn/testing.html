@@ -155,26 +155,27 @@
 		<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
 		<script type="text/javascript">
 			var self;
-			mui.plusReady(function(){
-				mui.init({
-					beforeback: function() {
-						if(testing.isAnswered&&!testing.isTested){
-							beforeLeaveDialog(function(){
-								testing.isAnswered = false;
-								mui.back();
-							});
-							return false;
+			mui.init({
+				beforeback: function() {
+					if(testing.isAnswered&&!testing.isTested){
+						beforeLeaveDialog(function(){
+							testing.isAnswered = false;
+							mui.back();
+						});
+						return false;
+					}else{
+						if(self.isTested){
+							plus.navigator.setStatusBarStyle('light');
 						}else{
-							if(self.isTested){
-								plus.navigator.setStatusBarStyle('light');
-							}else{
-								plus.navigator.setStatusBarStyle('light');
-								self.close(); //返回时,关闭页面
-								return false;
-							}
+							plus.navigator.setStatusBarStyle('light');
+							self.close(); //返回时,关闭页面
+							return false;
 						}
 					}
-				});
+				}
+			});
+			
+			mui.plusReady(function(){
 				
 				self = plus.webview.currentWebview();
 				
@@ -182,6 +183,7 @@
 				self.addEventListener("show", function(e){
 					plus.navigator.setStatusBarStyle('dark');
 				});
+//				plus.navigator.setStatusBarStyle('dark');
 				
 				// 获取题目
 				testing.isTested = self.isTested;
@@ -194,37 +196,9 @@
 					testing.time = self.used_time;
 				}else{ 
 					//新测试
-//					plus.nativeUI.showWaiting();
-//					commonAjax("/Ycyx/Practice/createPaper", {
-//						data: {
-//							catalogId: self.catalogId
-//						},
-//						success: function(res){
-//							console.log(res);
-//							var data = JSON.parse(res.data);
-//							if(data.questions&&data.questions.length){
-//								testing.paperName = data.paperName;
-//								testing.questions = data.questions;
-//								testing.diskey = data.diskey;
-//								//计时
-//								testing.timer();
-//							}else{
-//								plus.nativeUI.toast( "没有题目");
-//								testing.isBack = true;
-//								mui.back();
-//							}
-//							plus.nativeUI.closeWaiting();
-//						},
-//						fail: function(){
-//							plus.nativeUI.closeWaiting();
-//						},
-//						error: function(){
-//							plus.nativeUI.closeWaiting();
-//						}
-//					});
-					if(self.opener().id=="bl-test-start") {
-						self.opener().hide();
-					}
+//					if(self.opener().id=="bl-test-start") {
+//						self.opener().hide();
+//					}
 					testing.paperName = self.data.paperName;
 					testing.questions = self.data.questions;
 					testing.diskey = self.data.diskey;
@@ -264,8 +238,7 @@
 					isTested: false,
 					isSelecting: false,
 					diskey: "",
-					isAnswered: false,
-//					isBack: false
+					isAnswered: false
 				},
 				computed: {
 					//时间显示
@@ -357,6 +330,17 @@
 									}
 								}
 							});
+//							var test_submit = plus.webview.create("testSubmit.html", "bl-test-submit", {}, {
+//								submitData: {
+//										title: _this.headerTitle,
+//										diskey: _this.diskey,
+//										catalogId: self.catalogId,
+//										name: _this.paperName,
+//										usedTime: _this.timeStr,
+//										answerArray: ans
+//									}
+//							});
+//							test_submit.show("slide-in-right");
 						}else if(des<0){
 							return false;
 						}else{
@@ -399,7 +383,14 @@
 						}
 					},
 					getAnswerName: function(answer) {
-						return answer?answer.match(/[a-zA-Z]/)[0]:answer;
+						var asr = "";
+						if(answer){
+							var an1 = answer.match(/[a-zA-Z]/);
+							if(an1){
+								asr = an1[0];
+							}
+						}
+						return asr;
 					}
 				}
 			});
