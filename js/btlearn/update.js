@@ -1,3 +1,4 @@
+//app版本更新功能，需要：APPStore上的URL、APPStore上APP唯一标识ID、版本检测url、apk新版本下载地址
 
 if(window.plus){ 
     plusReady(); 
@@ -5,7 +6,7 @@ if(window.plus){
     document.addEventListener('plusready',plusReady,false); 
 } 
 
-//休眠方法
+//休眠方法，numberMillis间隔毫秒数，1000*秒*分*时*天*年
 var ver;
 function sleep(numberMillis) {
     var now = new Date();
@@ -42,7 +43,8 @@ function plusReady(){
                                         	mui.comfirm("发现新版本", "是否前往获取？", ['否', '是'], function(e){
                                         		if (e.index == 1) {
                                         			//上新APPStore下载地址
-                                        			document.location.href='https://itunes.apple.com/cn/app/san-gu-hui/id111030274?mt=8'; 
+                                        			var url='itms-apps://itunes.apple.com/cn/app/hello-h5+/id682211190?l=zh&mt=8'; 
+                                        			plus.runtime.openURL(url);
                                         		}
                                         	});
                                         }
@@ -68,9 +70,9 @@ function plusReady(){
                         var dtask = plus.downloader.createDownload(apk_url, {}, function(d, status) {
                             if (status == 200) {                                        
                                 plus.nativeUI.toast("正在准备环境，请稍后！");
-                                sleep(1000);
+                                sleep(86400000);
                                 var path = d.filename;//下载apk
-                                plus.runtime.install(path); // 自动安装apk文件
+                                plus.runtime.install(path); //自动安装apk文件
                             }else {
                                 alert('版本更新失败:' + status);
                             }
@@ -88,3 +90,4 @@ function plusReady(){
         }
     });
 }
+

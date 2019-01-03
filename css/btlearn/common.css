@@ -1,3 +1,4 @@
+/*益测益学通用样式*/
 html, body {
 	height: 100%;
 }
@@ -27,6 +28,14 @@ input {
 	-webkit-transform: translate3d(0,0,0);
 }
 
+/*主题色*/
+.mui-bar-nav.theme, #header:after {
+	background-color: #3C9DFB;
+	color: #FFFFFF;
+}
+.mui-bar-nav.theme a, .mui-bar-nav.theme .mui-title {
+	color: #FFFFFF;
+}
 .btn-theme:enabled{
 	color: #FFFFFF;
 	background-color: #3C9DFB;
@@ -40,6 +49,7 @@ input {
 	color: #3C9DFB;
 	background: none!important;
 }
+/*主题色-end*/
 
 body, .mui-content {
 	background-color: #FFFFFF;
@@ -55,6 +65,7 @@ body, .mui-content {
 	height: auto;
 	min-height: 0.84rem;
 	box-sizing: content-box;
+	/*沉浸式导航栏*/
 	padding-top: 0.4rem;
 }
 .mui-bar-nav~.mui-content {
@@ -105,13 +116,6 @@ body, .mui-content {
 	opacity: 0.8;
 }
 
-.mui-bar-nav.blue {
-	background-color: #3C9DFB;
-	color: #FFFFFF;
-}
-.mui-bar-nav.blue a, .mui-bar-nav.blue .mui-title {
-	color: #FFFFFF;
-}
 .mui-col-sm-2-5 {
 	float: left;
 	width: 20%;
@@ -204,6 +208,7 @@ body, .mui-content {
 }
 
 .btn-bottom {
+	color: #3C9DFB;
 	display: inline-block;
 	position: fixed;
 	bottom: 0.32rem;
@@ -217,7 +222,6 @@ body, .mui-content {
 	text-align: center;
 	box-shadow:0 0 4px rgba(0, 0, 0, 0.25);
 	font-size: 0.32rem;
-	color: #3C9DFB;
 	z-index: 9;
 }
 

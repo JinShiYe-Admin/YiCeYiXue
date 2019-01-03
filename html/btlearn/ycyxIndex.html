@@ -15,7 +15,6 @@
 				content: "";
 				position: absolute;
 				z-index: -1;
-				background: #3C9DFB;
 				left: 0;
 			    right: 0;
 			    top: 0;
@@ -130,22 +129,21 @@
 				vertical-align: middle;
 			}
 			ul.als-list li .sub .label {
-				display: inline-flex;
-			    justify-content: center;
-			    align-items: center;
-				font-size: 75%;
+				display: inline-block;
+				text-align: center;
 				border: 1px solid #25AE38;
 				color: #25AE38;
-				border-radius: 2px;
-				width: .6rem;
-				height: .32rem;
-				margin-left: -0.8rem;
-				margin-right: 0.2rem;
+				border-radius: 4px;
 				vertical-align: middle;
 				margin-top: -3px;
-			}
-			.mui-android .als-list li .sub .label {
-				padding-top: 2px;
+				width: 1.2rem;
+				height: .64rem;
+				line-height: .64rem;
+				font-size: 150%;
+				margin-left: -1.6rem;
+				margin-right: 0.4rem;
+				transform: scale(0.5);
+				transform-origin: 150% 50%;
 			}
 			ul.als-list li .sub .label.bad {
 				color: #DB4848;
@@ -175,7 +173,7 @@
 	</head>
 
 	<body>
-		<header id="header" class="mui-bar mui-bar-nav blue">
+		<header id="header" class="mui-bar mui-bar-nav theme">
 			<a v-show="!title" class="mui-icon mui-pull-right grade" @tap.stop="showTopPannel(1)" v-cloak>{{gradeItem?gradeItem.pername:"学段"}}<span class="mui-icon-arrowdown"></span></a>
 			<!--<a id="headImg" class="mui-icon mui-pull-left" @tap="openCenter">
 				<img v-if="headImg" :src="headImg" class="head-img"/>
@@ -742,7 +740,7 @@
 				});
 			}
 			
-//			analysis.alsList = [{"subname":"语文","count":52,"subcode":"01","remark":"-1","avg_score":14},{"subname":"语文","count":52,"subcode":"01","remark":"0","avg_score":14}];
+			analysis.alsList = [{"subname":"语文","count":52,"subcode":"01","remark":"-1","avg_score":14},{"subname":"语文","count":52,"subcode":"01","remark":"0","avg_score":14}];
 			
 		</script>
 	</body>
