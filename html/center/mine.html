@@ -36,14 +36,13 @@
 				position: fixed;
 				bottom: 0px;
 				width: 100%;
-				padding: 0.3rem 10% ;
-				background: #fff;
+				padding-bottom: .6rem;
+				text-align: center;
 			}
 			.out-btn button {
-				width: 100%;
-				height: 1.15rem;
-				line-height: 1.15rem;
-				padding: 0;
+				width: 80%;
+				line-height: 1;
+				padding: 12px;
 			}
 		</style>
 	</head>
@@ -121,7 +120,6 @@
 				methods: {
 					clickHeadImg: function(){
 						mui.openWindow({url: "headImg.html"});
-//						self.hide();
 					},
 					jumpToDetail: function(setting){
 						if(setting.tempID == 0){
@@ -130,26 +128,31 @@
 						}else if(setting.tempID == 1){
 							//我的订购
 							mui.openWindow("../../html/order/orderList.html");
-//							self.hide();
 						}else if(setting.tempID == 2){
 							//关于我们
 							mui.openWindow({url: "about.html"});
 						}
-//						self.hide();
 					}
 				}
 			});
 			
-			mui.init({
-				beforeback: function(){
-					self.hide();
-				}
-			});
+			mui.init();
 			
 			mui.plusReady(function(){
 				self = plus.webview.currentWebview();
 				if(JSON.stringify(personal)=="{}") {
 					self.reload();
+				}
+				
+				mui.back = function() {
+					self.hide("slide-out-left", 150);
+					self.opener().setStyle({mask: 'none'});
+					self.opener().setStyle({
+						left: '0',
+						transition: {
+							duration: 150
+						}
+					});
 				}
 				
 				//修改头像
@@ -163,32 +166,18 @@
 			
 			//退出当前账号
 			document.getElementById("close-btn").addEventListener('tap', function(){
-				//获取个人信息
-				var personal = store.get(window.storageKeyName.PERSONALINFO);
-				//解绑个推
-//				var info = plus.push.getClientInfo();
-//				var tempBindData = {
-//					appId: info.appid,
-//					alias: personal.utid,
-//					cid: info.clientid
-//				}
-//				unbindPro(tempBindData, function function_name(data) {
-//					if(data.RspCode == 0) {} else {}
-//				});
-				//设置app角标,flag=0直接设置角标数字，flag=1角标减1,falg=2角标加1
-//				utils.setBadgeNumber(0, 0);
-
 				//获取所有已打开的webview 实例————重新打开login.html————循环关闭页面
-				store.remove(window.storageKeyName.PERSONALINFO);
-				plus.webview.open('../../html/login/login.html','bl-index');
-				var wvs = plus.webview.all();
-				for(var i = 0, len = wvs.length; i < len; i++) {
-					//关闭除login页面外的其他页面
-					if(wvs[i].id=='bl-index') {
-						continue;
+				plus.webview.open('../../html/login/login.html', "", {}, "fade-in", 150, function(){
+					var wvs = plus.webview.all();
+					for(var i = 0, len = wvs.length; i < len; i++) {
+						//关闭除login页面外的其他页面
+						if(wvs[i]&&wvs[i].getURL()&&wvs[i].getURL().indexOf('login.html') != -1) {
+							continue;
+						}
+						plus.webview.close(wvs[i], "none");
 					}
-					plus.webview.close(wvs[i]);
-				}
+				});
+				store.remove(window.storageKeyName.PERSONALINFO);
 			});
 		</script>
 	</body>

@@ -34,9 +34,7 @@
 				<li class="mui-table-view-cell mui-media" @click="modifyImg()" id="imgCell">
 					<a href="javascript:;">
 						<img v-if="peopleHeadImg" class="mui-media-object mui-pull-right" id="img" :src=peopleHeadImg style="border-radius:50%;">
-						<svg v-else class="svg-icon mui-media-object mui-pull-right" aria-hidden="true">
-				            <use xlink:href="#mine" />
-				       	</svg>
+						<p v-else class="mui-ellipsis mui-pull-right headName" v-cloak>暂无头像</p>
 						<p class="mui-ellipsis">头像</p>
 					</a>
 				</li>

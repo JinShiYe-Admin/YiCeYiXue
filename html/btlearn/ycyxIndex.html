@@ -119,7 +119,8 @@
 			.als-list li {
 				display: flex;
 				justify-content: space-between;
-				padding: 0.35rem 0.6rem 0.35rem 0.2rem;
+				padding: 0.3rem 0.6rem 0.3rem 0.2rem;
+				line-height: 0.64rem;
 			}
 			.als-list li:first-child {
 				padding-bottom: 0.15rem;
@@ -175,12 +176,13 @@
 	<body>
 		<header id="header" class="mui-bar mui-bar-nav theme">
 			<a v-show="!title" class="mui-icon mui-pull-right grade" @tap.stop="showTopPannel(1)" v-cloak>{{gradeItem?gradeItem.pername:"学段"}}<span class="mui-icon-arrowdown"></span></a>
-			<!--<a id="headImg" class="mui-icon mui-pull-left" @tap="openCenter">
+			<!--个人中心-->
+			<a id="headImg" class="mui-icon mui-pull-left" @tap="openCenter">
 				<img v-if="headImg" :src="headImg" class="head-img"/>
-				<svg v-else class="svg-icon" aria-hidden="true">
+				<!--<svg v-else class="svg-icon" aria-hidden="true">
 		            <use xlink:href="#mine" />
-		       	</svg>
-			</a>-->
+		       	</svg>-->
+			</a>
 			<h1 class="mui-title" v-if="title" v-text="title"></h1>
 			<h1 class="mui-title" v-else>
 				<a class="subject mui-icon" @click.stop="showTopPannel(2)" v-cloak>{{subjectItem?(subjectItem.subname||"科目"):"科目"}}<span class="mui-icon-arrowdown"></span></a>
@@ -396,6 +398,12 @@
 				//有个人中心时
 				var head_img = document.getElementById("headImg");
 				if(head_img) {
+					
+					//关闭登录页
+					if(self.opener()){
+						self.opener().close("none");
+					}
+					
 					//预加载个人中心
 					center = mui.preload({
 						url: '../center/mine.html',
@@ -740,7 +748,7 @@
 				});
 			}
 			
-			analysis.alsList = [{"subname":"语文","count":52,"subcode":"01","remark":"-1","avg_score":14},{"subname":"语文","count":52,"subcode":"01","remark":"0","avg_score":14}];
+//			analysis.alsList = [{"subname":"语文","count":52,"subcode":"01","remark":"-1","avg_score":14},{"subname":"语文","count":52,"subcode":"01","remark":"0","avg_score":14}];
 			
 		</script>
 	</body>

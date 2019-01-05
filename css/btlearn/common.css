@@ -265,6 +265,7 @@ ul li.navigate-right:before {
 	display: flex;
 	justify-content: space-between;
 	padding: .35rem .6rem .33rem .4rem;
+	line-height: 150%;
 }
 .sub-list li .sub {
 	color: #222222;

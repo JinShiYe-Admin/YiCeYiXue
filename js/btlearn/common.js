@@ -126,23 +126,13 @@ function newTest(catalogId, title) {
 //			console.log(res);
 			var data = JSON.parse(res.data);
 			if(data.questions&&data.questions.length){
-//				mui.openWindow({
-//					url: "testing.html",
-//					id: "bl-testing",
-//					extras: {
-//						isTested: false,
-//						catalogId: catalogId,
-//						title: title,
-//						data: data
-//					}
-//				});
 				var new_test = plus.webview.create( "testing.html", "bl-testing", {}, {
 					isTested: false,
 					catalogId: catalogId,
 					title: title,
 					data: data
 				});
-				new_test.show("slide-in-right", 200, function(){
+				new_test.show("slide-in-right", 300, function(){
 					plus.nativeUI.closeWaiting();
 					plus.navigator.setStatusBarStyle('dark');
 				});
@@ -156,17 +146,6 @@ function newTest(catalogId, title) {
 		},
 		error: function() {
 			plus.nativeUI.closeWaiting();
-		}
-	});
-}
-
-//打开登录页
-function goLogin() {
-	mui.openWindow({
-		url: "../login/login.html",
-		id: "bl_login",
-		waiting: {
-			autoshow: false
 		}
 	});
 }
