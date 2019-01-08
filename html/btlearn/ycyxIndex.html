@@ -35,9 +35,6 @@
 			.mui-bar-tab .mui-tab-item .mui-icon~.mui-tab-label {
 				font-size: 0.24rem;
 			}
-			.mui-bar-tab .mui-tab-item.mui-active {
-				color: #30A1E6;
-			}
 			.kn-menu .label-wrapper {
 				padding: 0.3rem 1rem 0.3rem 0.2rem;
 				border-bottom: 1px solid #ECECEC;
@@ -176,13 +173,11 @@
 	<body>
 		<header id="header" class="mui-bar mui-bar-nav theme">
 			<a v-show="!title" class="mui-icon mui-pull-right grade" @tap.stop="showTopPannel(1)" v-cloak>{{gradeItem?gradeItem.pername:"学段"}}<span class="mui-icon-arrowdown"></span></a>
+			<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
 			<!--个人中心-->
-			<a id="headImg" class="mui-icon mui-pull-left" @tap="openCenter">
+			<!--<a id="headImg" class="mui-icon mui-pull-left" @tap="openCenter">
 				<img v-if="headImg" :src="headImg" class="head-img"/>
-				<!--<svg v-else class="svg-icon" aria-hidden="true">
-		            <use xlink:href="#mine" />
-		       	</svg>-->
-			</a>
+			</a>-->
 			<h1 class="mui-title" v-if="title" v-text="title"></h1>
 			<h1 class="mui-title" v-else>
 				<a class="subject mui-icon" @click.stop="showTopPannel(2)" v-cloak>{{subjectItem?(subjectItem.subname||"科目"):"科目"}}<span class="mui-icon-arrowdown"></span></a>
@@ -321,10 +316,10 @@
 		</div>
 		
 		<script src="../../js/mui.min.js"></script>
-		<script type="text/javascript" src="../../js/vue.js" ></script>
-		<!--<script type="text/javascript" src="../../js/vconsole.min.js" ></script>-->
-		<script type="text/javascript" src="../../js/echarts.min.js" ></script>
-		<script src='../../js/jquery.min.js'></script>
+		<script type="text/javascript" src="../../js/utils/vue.js" ></script>
+		<!--<script type="text/javascript" src="../../js/utils/vconsole.min.js" ></script>-->
+		<script type="text/javascript" src="../../js/libs/echarts.min.js" ></script>
+		<script src='../../js/libs/jquery.js'></script>
 		
 		<!--加密-->
 		<script src="../../js/libs/RSA/Barrett.js" type="text/javascript" charset="utf-8"></script>
@@ -541,6 +536,7 @@
 							timeout: 5000,
 							type: 'post',
 							success: function(res){
+								console.log(res.data)
 								var rdata = JSON.parse(res.data);
 								//科目
 								_this.subject = {

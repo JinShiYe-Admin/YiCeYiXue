@@ -21,14 +21,8 @@ body {
 	width: auto;
 	height: auto;
 }
-input {
-	-webkit-tap-highlight-color:transparent;
-	-webkit-touch-callout: none;
-	-webkit-backface-visibility: hidden;
-	-webkit-transform: translate3d(0,0,0);
-}
 
-/*主题色*/
+/*主题色，独立版：#3C9DFB，校讯通：#00CFBD*/
 .mui-bar-nav.theme, #header:after {
 	background-color: #3C9DFB;
 	color: #FFFFFF;
@@ -48,6 +42,9 @@ input {
 	border: 1px solid #3C9DFB;
 	color: #3C9DFB;
 	background: none!important;
+}
+.mui-bar-tab .mui-tab-item.mui-active, .btn-bottom {
+	color: #3C9DFB;
 }
 /*主题色-end*/
 
@@ -208,7 +205,6 @@ body, .mui-content {
 }
 
 .btn-bottom {
-	color: #3C9DFB;
 	display: inline-block;
 	position: fixed;
 	bottom: 0.32rem;
@@ -519,6 +515,15 @@ ul li.navigate-right:before {
 	#testLine {
 		height: 400px;
 	}
+}
+
+
+/*独立版额外样式*/
+input {
+	-webkit-tap-highlight-color:transparent;
+	-webkit-touch-callout: none;
+	-webkit-backface-visibility: hidden;
+	-webkit-transform: translate3d(0,0,0);
 }
 
 /*订购页面*/
