@@ -153,9 +153,10 @@
 			});
 			
 			mui.plusReady(function(){
+				var isImmer = plus.navigator.isImmersedStatusbar();
 				mui.init({
 					beforeback: function() {
-						plus.navigator.setStatusBarStyle('dark');
+						isImmer&&plus.navigator.setStatusBarStyle('dark');
 						//echarts 重新绘图
 						var als_detail = plus.webview.getWebviewById('bl-analysis-detail');
 						als_detail && mui.fire(als_detail, "rePain");
@@ -165,7 +166,7 @@
 				});
 
 				self = plus.webview.currentWebview();
-				plus.navigator.setStatusBarStyle('light');
+				isImmer&&plus.navigator.setStatusBarStyle('light');
 				anserCard.answer = self.submitData.answerArray;
 			});
 			

@@ -350,10 +350,10 @@
 			
 			mui.plusReady(function() {
 				self = plus.webview.currentWebview();
-				//禁止横屏
-				plus.screen.lockOrientation("portrait-primary");
 				//状态栏白色
-				plus.navigator.setStatusBarStyle('light');
+				if(plus.navigator.isImmersedStatusbar()){
+					plus.navigator.setStatusBarStyle('light');
+				}
 				
 				//最初数据， 获取目录
 				header.setMenu();
@@ -526,7 +526,6 @@
 					},
 					// 设置目录
 					setMenu: function(data) {
-						console.log("设置目录");
 						testMenu.isLoaded = false;
 						plus.nativeUI.showWaiting();
 						var _this = this;
@@ -536,7 +535,7 @@
 							timeout: 5000,
 							type: 'post',
 							success: function(res){
-								console.log(res.data)
+								console.log("设置目录: "+res.data)
 								var rdata = JSON.parse(res.data);
 								//科目
 								_this.subject = {

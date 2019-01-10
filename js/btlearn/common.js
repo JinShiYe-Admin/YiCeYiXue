@@ -134,7 +134,9 @@ function newTest(catalogId, title) {
 				});
 				new_test.show("slide-in-right", 300, function(){
 					plus.nativeUI.closeWaiting();
-					plus.navigator.setStatusBarStyle('dark');
+					if(plus.navigator.isImmersedStatusbar()){
+						plus.navigator.setStatusBarStyle('dark');
+					}
 				});
 			}else{
 				plus.nativeUI.toast( "没有题目");

@@ -154,7 +154,7 @@
 		
 		<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
 		<script type="text/javascript">
-			var self;
+			var self, isImmer;
 			mui.init({
 				beforeback: function() {
 					if(testing.isAnswered&&!testing.isTested){
@@ -165,9 +165,9 @@
 						return false;
 					}else{
 						if(self.isTested){
-							plus.navigator.setStatusBarStyle('light');
+							isImmer&&plus.navigator.setStatusBarStyle('light');
 						}else{
-							plus.navigator.setStatusBarStyle('light');
+							isImmer&&plus.navigator.setStatusBarStyle('light');
 							self.close(); //返回时,关闭页面
 							return false;
 						}
@@ -178,12 +178,15 @@
 			mui.plusReady(function(){
 				
 				self = plus.webview.currentWebview();
+				isImmer = plus.navigator.isImmersedStatusbar();
 				
 				//状态栏样式
-				self.addEventListener("show", function(e){
-					plus.navigator.setStatusBarStyle('dark');
-				});
-//				plus.navigator.setStatusBarStyle('dark');
+				if(isImmer){
+					self.addEventListener("show", function(e){
+						plus.navigator.setStatusBarStyle('dark');
+					});
+				}
+				
 				
 				// 获取题目
 				testing.isTested = self.isTested;
