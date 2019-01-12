@@ -3,8 +3,8 @@
 	"id": "H55459A7D",/*应用的标识，创建应用时自动生成，勿手动修改*/
 	"name": "益测益学",/*应用名称，程序桌面图标名称*/
 	"version": {
-		"name": "1.0.0",/*应用版本名称*/
-		"code": "83"
+		"name": "1.0",/*应用版本名称*/
+		"code": ""
 	},
 	"description": "",/*应用描述信息*/
 	"icons": {
@@ -69,8 +69,8 @@
 				"UIReserveStatusbarOffset": true,
 				"frameworks": [],
 				"plistcmds": [
-					"Set:NSPhotoLibraryUsageDescription 选择图片",
-					"Set:NSCameraUsageDescription 拍照生成图片",
+					"Set:NSPhotoLibraryUsageDescription 选择图片来替换头像",
+					"Set:NSCameraUsageDescription 拍照生成图片来替换头像",
 					"Set:NSLocationAlwaysUsageDescription 根据您的位置信息提供服务",
 					"Set:NSLocationWhenInUseUsageDescription 使用用户地理位置提供服务"
                ]
