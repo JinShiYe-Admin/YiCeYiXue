@@ -49,7 +49,7 @@ var storageKeyName = (function(mod) {
 			mod.SCHOOLID = 100131;
 			mod.USERTYPE = 2;//用户类型，0老师,1家长,2学生
 			mod.INTERFACEGU = "https://boss.zhuxue101.net:444/api/Data/"; //用户信息接口
-			mod.YCYXHOST = "http://zhxyx.jiaobaowang.net/yiceyixue";//益测益学服务端地址
+			mod.YCYXHOST = "https://zhxyx.jiaobaowang.net/yiceyixue";//益测益学服务端地址
 			break;
 			
 		default:
