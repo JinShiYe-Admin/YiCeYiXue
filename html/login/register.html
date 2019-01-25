@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
 		<style type="text/css">
@@ -22,10 +22,11 @@
 			.mui-input-row label {
 				width: 15%;
 				padding-right: 0;
+				padding-bottom: 0;
 			}
 			.mui-input-row label .icon {
 				font-size: 20px;
-				color: #B5B5B5;
+				/* color: #B5B5B5; */
 			}
 			.mui-input-row label~input {
 				font-size: 14px;
@@ -48,6 +49,7 @@
 			    height: 25px;
 			    width: 85px;
 			    font-size: 12px;
+				line-height: 1;
 			    padding: 6px 0;
 			    margin-top: -35px;
 			    right: 5%;
@@ -64,9 +66,10 @@
 				display: inline-block;
 			}
 			.check .mui-checkbox input[type=checkbox] {
-				top: -2px;
+				top: -3px;
 				left: 5px;
 			}
+			.mui-ios .check .mui-checkbox input[type=checkbox] { top: -5px; }
 			.check .mui-checkbox input[type=checkbox]:before {
 				font-size: 18px;
 			}
@@ -299,6 +302,8 @@
 								params.userName = '';
 								params.password = '';
 								mui.back();
+							} else if(data.RspCode == '0002') {
+								mui.toast("验证码不正确或者已过期");
 							} else {
 								mui.toast(data.RspTxt);
 							}

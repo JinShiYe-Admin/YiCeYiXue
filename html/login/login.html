@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
 		<style type="text/css">
@@ -53,7 +53,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav theme">
 			<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
-			<!--<a id='register' class="mui-icon mui-pull-right">注册</a>-->
+			<a id='register' class="mui-icon mui-pull-right">注册</a>
 			<h1 class="mui-title">益测益学</h1>
 		</header>
 		<div class="mui-content">
@@ -278,10 +278,14 @@
 									permission = false;
 								}
 								if(permission) {
-									mui.openWindow({
-										url: '../btlearn/ycyxIndex.html',
-										id: 'bl-index'
-									});
+									if(mui.os.ios){
+										plus.webview.open('../btlearn/ycyxIndex.html','bl-index',{},'slide-in-right');
+									}else{
+										mui.openWindow({
+											url: '../btlearn/ycyxIndex.html',
+											id: 'bl-index'
+										});
+									}
 								}else{
 									mui.toast("您没有登录权限");
 								}
