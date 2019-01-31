@@ -1,20 +1,4 @@
 
-// 获取套餐学段名
-function getPrdName(fx) {
-	var names = [];
-	fx && fx.forEach(function(v){
-		if(v.itemcode=="prd"){
-			var values = v.itemsons.split(",");
-			for(var i=0;i<values.length;i++){
-				var fv = values[i].split("|").pop();
-				if(fv) names.push(fv);
-			}
-		}
-	});
-    return  names;
-}
-
-
 //common ajax
 function commonAjax(url, ops) {
 	if(plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
@@ -113,6 +97,26 @@ function pageError() {
 
 function reload() {
 	window.location.reload();
+}
+
+// 获取套餐学段名
+function getPrdName(fx) {
+	var names = [];
+	fx && fx.forEach(function(v){
+		if(v.itemcode=="prd"){
+			var values = v.itemsons.split(",");
+			for(var i=0;i<values.length;i++){
+				var fv = values[i].split("|").pop();
+				if(fv) names.push(fv);
+			}
+		}
+	});
+    return  names;
+}
+
+// 套餐价格
+function orderPrice(fee) {
+	return fee/100;
 }
 
 //打开新测试页

@@ -34,6 +34,43 @@ var utils = (function(mod) {
 			plus.runtime.setBadgeNumber(badgeNumber);
 		}
 	}
+	
+	//是否可以新增修改，flag=0只班主任，flag=1班主任和任课老师都可以
+	mod.canNotAddModify = function(flag) {
+		var personal = store.get(window.storageKeyName.PERSONALINFO);
+		var tempFlag = 0;
+		for (var i = 0; i < personal.clss.length; i++) {
+			var tempModel = personal.clss[i];
+			if (flag == 0) {
+				//是班主任，并且班级没有毕业
+				if (tempModel.isms == 1&&tempModel.isfinish == 0) {
+					tempFlag++;
+				}
+			} else{
+				//班级没有毕业
+				if (tempModel.isfinish == 0) {
+					tempFlag++;
+				}
+			}
+		}
+		if(tempFlag>0) {
+			return true;
+		}
+		return false;
+	}
+	
+	//比对时间大小
+	mod.compairTime = function(startTime, endTime) {
+		if(startTime == '请选择' || endTime == '请选择') {
+			return true;
+		}
+		var start = new Date(startTime.replace("-", "/").replace("-", "/"));
+		var end = new Date(endTime.replace("-", "/").replace("-", "/"));
+		if(end > start) {
+			return true;
+		}
+		return false;
+	}
 
 	mod.getUUID = function() {
 		var s = [];

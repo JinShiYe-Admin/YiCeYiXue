@@ -60,8 +60,12 @@ var storageKeyName = (function(mod) {
 		default:
 			break;
 	}
-	mod.BADGENUMBER = 'badgeNumber'//app角标
-	mod.PUBLICPARAMETER = 'publicParameter'//共用参数
+	
+	//套餐功能类型，多个之间用英文逗号隔开
+	mod.FUNCTYPES = 'ycyx'; 
+	
+	mod.BADGENUMBER = 'badgeNumber';//app角标
+	mod.PUBLICPARAMETER = 'publicParameter';//共用参数
 	mod.ISFIRST = 'isFitst'; //是否是第一次登陆
 	mod.ICONNUM = 0; //角标数量
 	mod.PERSONALINFO = 'personalInfo1111'; //个人信息，登录成功后返回值
