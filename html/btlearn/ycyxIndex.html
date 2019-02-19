@@ -31,6 +31,7 @@
 				font-size: 0.44rem;
 				top: 0;
     			margin-bottom: 0.04rem;
+				pointer-events: none;
 			}
 			.mui-bar-tab .mui-tab-item .mui-icon~.mui-tab-label {
 				font-size: 0.24rem;
@@ -123,7 +124,8 @@
 			<div id="test-menu" class="mui-control-content mui-active">
 				<div id="testMenu" class="mui-content vue-tree">
 					<div class="kn-menu" v-cloak>
-						<tree-menu v-for="(model, i) in menu" :model="model" :key="i" :depth="0" @node-click="selectNode"></tree-menu>
+						<tree-menu v-for="(model, i) in menu" :key="i" 
+						:model="model" :depth="0" :activeid="0" :hidefinish="false" @node-click="selectNode"></tree-menu>
 						<p v-if="!menu.length&&isLoaded"  style="padding: 0.3rem;">暂无目录</p>
 					</div>
 				</div>
@@ -240,6 +242,7 @@
 			
 			mui.plusReady(function() {
 				self = plus.webview.currentWebview();
+				
 				//状态栏白色
 				if(plus.navigator.isImmersedStatusbar()){
 					plus.navigator.setStatusBarStyle('light');
@@ -285,9 +288,9 @@
 				if(head_img) {
 					
 					//关闭登录页
-					if(self.opener()){
-						self.opener().close("none");
-					}
+					self.addEventListener("show", function(){
+						self.opener() && self.opener().close("none");
+					});
 					
 					//预加载个人中心
 					center = mui.preload({
@@ -510,12 +513,12 @@
 							type: 'get',
 							timeout: 5000,
 							success: function(res) {
-//								console.log(res);
-								var res_data = JSON.parse(res.data);
+								// console.log(res);
+								var res_data = res.data;
 								mui.fire(test_start, "getData", {
 									title: model.name, 
 									catalogId: model.id,
-									difficulty: res_data.schedule?res_data.schedule.difficulty_level_id:1
+									difficulty: res_data
 								});
 								test_start.show("slide-in-right");
 								plus.nativeUI.closeWaiting();
@@ -643,7 +646,7 @@
 				});
 			}
 			
-//			analysis.alsList = [{"subname":"语文","count":52,"subcode":"01","remark":"-1","avg_score":14},{"subname":"语文","count":52,"subcode":"01","remark":"0","avg_score":14}];
+			// analysis.alsList = [{"subname":"语文","count":52,"subcode":"01","remark":"-1","avg_score":14},{"subname":"语文","count":52,"subcode":"01","remark":"0","avg_score":14}];
 			
 		</script>
 	</body>

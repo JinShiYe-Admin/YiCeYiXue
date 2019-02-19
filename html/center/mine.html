@@ -170,11 +170,11 @@
 				//获取所有已打开的webview 实例————重新打开login.html————循环关闭页面
 				var login = plus.webview.create('../../html/login/login.html');
 				login.onloaded = function(){
-					login.show("fade-in");
+					login.show(mui.os.ios?"fade-in":"slide-in-right");
 					var wvs = plus.webview.all();
 					for(var i = 0, len = wvs.length; i < len; i++) {
 						//关闭除login页面外的其他页面
-						if(wvs[i]&&wvs[i].getURL()&&wvs[i].getURL().indexOf('login.html') != -1) {
+						if(wvs[i].id==login.id) {
 							continue;
 						}
 						plus.webview.close(wvs[i], "none");

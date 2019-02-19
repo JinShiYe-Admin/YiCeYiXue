@@ -186,7 +186,7 @@ function readTree(tree, callback) {
 					'</div>'+
 					'<div v-else class="label-wrapper mui-ellipsis" @tap="nodeClick(model)" :class="{active:model.id==activeid}" :style="indent">'+
 						'<span class="label-name">{{model.name}}</span>'+
-						'<span v-if="model.is_finish&&!hideFinish" class="done-box icon-true"></span>'+
+						'<span v-if="model.is_finish&&!hidefinish" class="done-box icon-true"></span>'+
 					'</div>'+
 					'<tree-menu v-show="showChildren" v-for="(node, k) in model.children" :model="node" :depth="depth + 1" :activeid="activeid" :hidefinish="hidefinish" :key="k" @node-click="outClick"></tree-menu>'+
 				'</div>',
@@ -438,3 +438,4 @@ function GetSlideDirection(startX, startY, endX, endY) {
 	}
 	ready(appendSvg)
 })(window);
+

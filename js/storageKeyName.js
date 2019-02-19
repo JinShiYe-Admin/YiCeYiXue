@@ -3,6 +3,7 @@
 var storageKeyName = (function(mod) {
 
 	mod.key = 0; //0,开发;1,部署外网
+	mod.pay = 0; //0,单个商家接口;1,多商家接口
 	var exLog = console.log;
 	console.log = function(hint, object) {
 		if(mod.key === 0) {
@@ -21,16 +22,16 @@ var storageKeyName = (function(mod) {
 			mod.INTERFACEKONG = 'https://jbyj.jiaobaowang.net:8443/SchoolCommunicationService/';//孔工接口
 			mod.TEACHERIMG = 'https://zhxy.jiaobaowang.net:8515/schadminwebadmin/upuserimg.ashx?userid='; //老师上传头像
 //			mod.ANDROIDUPDATEURL='http://zhxy.jiaobaowang.net:8015/appupdate/xxt/versionCode.xml';//安卓升级地址
-			//---开发---start---
-//			mod.MAINEDU = 'https://jbyc.jiaobaowang.net:8442/'; //科教图片url
-//			mod.MAINURL = 'https://jbyc.jiaobaowang.net:8442/api/CloudApi/'; //主url
-//			mod.MAINJIAOXIAOURL = 'http://192.168.1.113:8081/JiaoBaoCloudService/'; //家校圈url
-//			mod.MAINHOMEWORKURL = 'http://192.168.1.44:8513/'; //作业主url
-//			mod.MAINQIUZHI = 'http://192.168.1.113:8081/JiaoBaoCloudService/'; //求知主url
-//			mod.MAINMICROCLASS = 'http://192.168.1.113:8081/JiaoBaoCloudService/'; //微课主url
-//			mod.WXPAYSERVER='http://jsypay.jiaobaowang.net/jsypay/wxpay/sys/AppServer.aspx';//微信支付地址
-//			mod.ALIPAYSERVER='http://192.168.1.121:8081/app/versionCode.xml';//支付宝支付地址
-			//---开发---end---
+
+			mod.ALIPAYSERVER='http://192.168.1.121:8081/app/versionCode.xml';//支付宝支付地址
+			if(mod.pay==0) {//单商家
+				mod.WXPAYSERVER='http://jsypay.jiaobaowang.net/jsypay/wxpay/sys/AppServer.aspx';//微信支付地址
+				mod.SEARCHPAYSESULT='http://jsypay.jiaobaowang.net/jsypay/wxpay/sys/PcQRCode.aspx';//获取支付结果的地址
+			}else if(mod.pay==1){//多商家
+				mod.WXPAYSERVER='http://jsypay.jiaobaowang.net/jsypaym/wxpay/sys/AppServer.aspx';//微信支付地址
+				mod.SEARCHPAYSESULT='http://jsypay.jiaobaowang.net/jsypaym/wxpay/sys/PcQRCode.aspx';//获取支付结果的地址
+			}
+
 			//---七牛空间和接口---开发---start---
 //			mod.QNPB = 'https://qn-educds.jiaobaowang.net/'; //公开空间域名
 			mod.QNGETUPLOADTOKEN = 'https://jbyc.jiaobaowang.net:8504/Api/QiNiu/GetUpLoadToKen';
@@ -42,7 +43,8 @@ var storageKeyName = (function(mod) {
 			
 			//益测益学服务端地址
 			//本地：http://192.168.0.125:8080/yiceyixue; 开发：http://139.129.252.49:8080/yiceyixue;
-			mod.YCYXHOST = "http://139.129.252.49:8080/yiceyixue";
+			mod.YCYXHOST = "http://192.168.0.125:8080/yiceyixue";
+			// mod.YCYXHOST = "http://139.129.252.49:8080/yiceyixue";
 			break;
 		
 		case 1://正式

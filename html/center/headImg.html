@@ -93,7 +93,7 @@
 						id: personal.utid, //utid
 						//name: data.studentName //资料名称
 					}, function(successCB) {
-						setHeadImg(successCB);
+						updateHeadImg(successCB);
 					}, function(errorCB) {
 						//console.log('上传并修改个人头像，失败的回调' + JSON.stringify(errorCB));
 						mui.toast(errorCB.RspTxt);
@@ -200,7 +200,7 @@
 									console.log("上传成功：" + t.responseText);
 									mui.toast('个人头像更新成功');
 									// 设置头像
-									setHeadImg('https://' + result.RspData);
+									replaceHeadImg('https://' + result.RspData);
 								} else {
 									console.log("上传失败 ：" + t.responseText);
 									wt.close();
@@ -237,18 +237,24 @@
 			}
 		
 			//上传成功设置主页和本业头像
-			function setHeadImg(tempImg) {
-				peopleInfo.peopleHeadImg = tempImg;
-				personal.imgurl = tempImg;
-				store.set(window.storageKeyName.PERSONALINFO, personal);
-				
-				mui.fire(plus.webview.currentWebview().opener(), 'mine_setHeadImg', {
-					imgurl: tempImg
-				});
+			function updateHeadImg(tempImg) {
+				var baseUrl = tempImg.split("?")[0];
+				mui.toast('个人头像更新成功',{ duration:'long', type:'div' });
+				var times = 0;
+				var timer = setInterval(function(){
+					var myDate = new Date();
+					var imgeURL = baseUrl + '?' + myDate.getTime();
+					console.log(imgeURL);
+					replaceHeadImg(imgeURL);
+					times++;
+					times>3 && clearInterval(timer);
+				}, 500);
 			}
 			function replaceHeadImg(tempImg) {
 				peopleInfo.peopleHeadImg = tempImg;
 				personal.imgurl = tempImg;
+				store.set(window.storageKeyName.PERSONALINFO, personal);
+				// 更新上一页头像
 				mui.fire(plus.webview.currentWebview().opener(), 'mine_setHeadImg', {imgurl: tempImg});
 			}
 		

@@ -63,6 +63,9 @@ body, .mui-content {
 	height: 100%;
 	overflow-y: auto;				
 }
+.mui-content::-webkit-scrollbar {
+	display: none;
+}
 /*沉浸式导航栏*/
 .mui-bar-nav {
 	height: auto;
@@ -213,12 +216,6 @@ body, .mui-content {
 	color: #222222;
 	font-size: 0.22rem;
 }
-.lv-item .lv-msg > span {
-	display: none;
-}
-.lv-item.current .lv-msg > span {
-	display: inline;
-}
 
 .btn-bottom {
 	display: inline-block;
@@ -246,7 +243,8 @@ body, .mui-content {
     line-height: 1;
     color: #bbb;
     text-decoration: none;
-    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+	transform: translateY(-50%);
     content: '\e583';
 }
 
@@ -334,16 +332,19 @@ ul li.navigate-right:before {
     height: 0.18rem;
     border-bottom: 1px solid #4AC058;
     border-right: 1px solid #4AC058;
+	-webkit-transform: rotate(45deg);
 	transform: rotate(45deg);
 }
 
 /*动画*/
 .slide-down-enter-active, .slide-down-leave-active {
+	-webkit-transform: translate3d(0, 0, 0);
 	transform: translate3d(0, 0, 0);
+	-webkit-transition: transform .25s ease;
 	transition: transform .25s ease;
 }
 .slide-down-enter, .slide-down-leave-to {
-	transform: translateY(-100%);
+	-webkit-transform: translateY(-100%);
 }
 .fade-in-enter-active, .fade-in-leave-active {
   transition: all .8s;
@@ -353,8 +354,8 @@ ul li.navigate-right:before {
 }
 
 @keyframes rotate {
-	from{transform: rotate(0);}
-	to{transform: rotate(360deg);}
+	from{-webkit-transform: rotate(0); transform: rotate(0);}
+	to{-webkit-transform: rotate(360deg); transform: rotate(360deg);}
 }
 
 /*对话框*/
@@ -612,7 +613,9 @@ ul.als-list li .sub .label {
 	font-size: 150%;
 	margin-left: -1.6rem;
 	margin-right: 0.4rem;
+	-webkit-transform: scale(0.5);
 	transform: scale(0.5);
+	-webkit-transform-origin: 150% 50%;
 	transform-origin: 150% 50%;
 }
 ul.als-list li .sub .label.bad {
@@ -644,8 +647,10 @@ ul.als-list li .score {
     height: 1px;
     content: '';
     background-color: #CCCCCC;
-    transform: scaleY(.5);
-    transform-origin: top;
+    -webkit-transform: scaleY(.5);
+	transform: scaleY(.5);
+    -webkit-transform-origin: top;
+	transform-origin: top;
     z-index: 10;
 	backface-visibility: hidden;
 }
@@ -799,8 +804,6 @@ input {
 	height: 27px;
 	line-height: 27px;
 }
-
-
 .check label > a, .user-title-footer .ul-p, .user-title-footer .ul-p-right,
 .mui-checkbox input[type=checkbox]:checked:before, .mui-radio input[type=radio]:checked:before {
 	color: #3C9DFB;
@@ -812,7 +815,6 @@ input {
     height: 50px;
 	border-radius: 0;
 }
-
 .bottom-row {
 	position: fixed;
 	bottom: 0;
@@ -834,7 +836,6 @@ input {
     transform-origin: 0 90%;
     background-color: #c8c7cc;
 }
-
 .mui-ellipsis-title .mark, .user-title .mark {
 	border: 1px solid #ffb964;
 	border-radius: 2px;

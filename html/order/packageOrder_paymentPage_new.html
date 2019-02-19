@@ -27,7 +27,7 @@
 			}
 			#orderData {
 				padding-top: 5px;
-				padding-bottom: 50px;
+				padding-bottom: 60px;
 			}
 			.flex-between .mui-media-object {
 				width: 90px;
@@ -52,6 +52,7 @@
 				background: #FFFFFF;
 				width: 100%;
 				height: 50px;
+				margin-bottom: 0;
 			}
 			.mui-poppicker-header .mui-btn {
 				font-size: 100%;
@@ -402,10 +403,6 @@
 					reCheck();
 				});
 				
-				// 设置滚动
-				mui('.mui-scroll-wrapper').scroll({
-					indicators: false
-				});
 			});
 
 			//尝试重新查询
@@ -678,13 +675,13 @@
 						var _this = this;
 						timePicker.show(function(items){
 							_this.servm = items[0].value;
-							_this.feem = (items[0].value * 1 * univlent * 1).toFixed(2);
-							appPay.feem = _this.feem;
+							_this.feem = (items[0].value * 1 * univlent * 1);
+							appPay.feem = _this.feem*1;
 						});
 					},
 					payAction: function() { //支付
 						if (this.servm == 0) {
-							mui.toast('您还没有选择时长')
+							mui.toast('您还没有选择时长');
 						} else {
 							//判断必选项大于0的是否都选择了
 							var strs = [];
@@ -716,7 +713,9 @@
 									//										order();
 									appPay.payCode = true;
 									//调起支付
-									appPay.pay(appPay.wxpay, function success() {}, function fail(code, err) {
+									appPay.pay(appPay.wxpay, function success() {
+										console.log("支付成功");
+									}, function fail(code, err) {
 										plus.nativeUI.alert("支付失败");
 									});
 								}
@@ -732,6 +731,16 @@
 				el: "#funcPopover",
 				data: {
 					sysfuncList: []
+				},
+				watch: {
+					'sysfuncList': function(v) {
+						v.length && this.$nextTick(function () {
+							// 设置滚动
+							mui('.mui-scroll-wrapper').scroll({
+								indicators: false
+							});
+						});
+					}
 				},
 				methods: {
 					childCheckAll: orderData.childCheckAll,
@@ -760,7 +769,7 @@
 					var sysfuncModel = orderData.sysfuncList[i];
 					for (var a = 0; a < sysfuncModel.fext.length; a++) {
 						var fextModel = sysfuncModel.fext[a];
-						console.log("liushai:" + fextModel.checked);
+						console.log("fextModel:" + fextModel.checked);
 						if (fextModel.checked != '' && fextModel.checked != undefined) {
 							var tempModel = {
 								fcode: sysfuncModel.fcode, //功能代码
@@ -805,11 +814,11 @@
 				var fcodes = orderDetailData.orderDetail.fcodes;
 				// 获取当前项目套餐功能代码串
 				if(functypes) {
-					var this_funcs = orderDetailData.orderDetail.funcs.find(function(v){
+					var this_funcs = orderDetailData.orderDetail.funcs.filter(function(v){
 						return v.ftype==functypes;
 					});
-					if(this_funcs) {
-						fcodes = this_funcs.fcode;
+					if(this_funcs[0]) {
+						fcodes = this_funcs[0].fcode;
 					}
 				}
 				//不需要加密的数据
@@ -867,9 +876,9 @@
 				return reg.test(this);
 			}
 
-			orderData.sysfuncList = [{"fext":[{"itemcode":"sub","itemname":"科目","itemsons":["01|语文","02|数学","03|英语"],"itemsonsc":3,"labelName":"请选择科目（最多可选3个）"},{"itemcode":"prd","itemname":"学段","itemsons":["1|幼儿园","2|小学","3|初中","4|高中"],"itemsonsc":1,"labelName":"请选择学段（最多可选1个）"},{"itemcode":"grd","itemname":"年级","itemsons":["1001|小小班","1002|小班","1003|中班","1004|大班","1005|学前班"],"itemsonsc":1,"labelName":"请选择年级（最多可选1个）","gid":"1"},{"itemcode":"grd","itemname":"年级","itemsons":["2001|一年级","2002|二年级","2003|三年级","2004|四年级","2005|五年级","2006|六年级"],"itemsonsc":1,"labelName":"请选择年级（最多可选1个）","gid":"2"},{"itemcode":"grd","itemname":"年级","itemsons":["3001|初一","3002|初二","3003|初三","3004|初四"],"itemsonsc":1,"labelName":"请选择年级（最多可选1个）","gid":"3"},{"itemcode":"grd","itemname":"年级","itemsons":["4001|高一","4002|高二","4003|高三"],"itemsonsc":1,"labelName":"请选择年级（最多可选1个）","gid":"4"}],"fid":3,"fcode":"ycyx001","ftype":"ycyx","fname":"益测益学功能","frange":"一个年级","fset":"sub!01,02,03!3","fnote":"","fdes":"益测益学功能"}];
+			// orderData.sysfuncList = [{"fext":[{"itemcode":"sub","itemname":"科目","itemsons":["01|语文","02|数学","03|英语"],"itemsonsc":3,"labelName":"请选择科目（最多可选3个）"},{"itemcode":"prd","itemname":"学段","itemsons":["1|幼儿园","2|小学","3|初中","4|高中"],"itemsonsc":1,"labelName":"请选择学段（最多可选1个）"},{"itemcode":"grd","itemname":"年级","itemsons":["1001|小小班","1002|小班","1003|中班","1004|大班","1005|学前班"],"itemsonsc":1,"labelName":"请选择年级（最多可选1个）","gid":"1"},{"itemcode":"grd","itemname":"年级","itemsons":["2001|一年级","2002|二年级","2003|三年级","2004|四年级","2005|五年级","2006|六年级"],"itemsonsc":1,"labelName":"请选择年级（最多可选1个）","gid":"2"},{"itemcode":"grd","itemname":"年级","itemsons":["3001|初一","3002|初二","3003|初三","3004|初四"],"itemsonsc":1,"labelName":"请选择年级（最多可选1个）","gid":"3"},{"itemcode":"grd","itemname":"年级","itemsons":["4001|高一","4002|高二","4003|高三"],"itemsonsc":1,"labelName":"请选择年级（最多可选1个）","gid":"4"}],"fid":3,"fcode":"ycyx001","ftype":"ycyx","fname":"益测益学功能","frange":"一个年级","fset":"sub!01,02,03!3","fnote":"","fdes":"益测益学功能"}];
 // 			orderData.monthList = [1,2,3,4,5,6,7,8,9,10];
-			funcPopover.sysfuncList = orderData.sysfuncList;
+			// funcPopover.sysfuncList = orderData.sysfuncList;
 		</script>
 	</body>
 
