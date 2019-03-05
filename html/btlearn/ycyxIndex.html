@@ -63,7 +63,7 @@
 
 	<body>
 		<header id="header" class="mui-bar mui-bar-nav theme">
-			<a v-show="!title" class="mui-icon mui-pull-right grade" @tap.stop="showTopPannel(1)" v-cloak>{{gradeItem?gradeItem.pername:"学段"}}<span class="mui-icon-arrowdown"></span></a>
+			<a v-show="!title" class="mui-icon mui-pull-right grade" @tap.stop="showTopPannel(1)" v-cloak>{{gradeItem?(gradeItem.pername||"学段"):"学段"}}<span class="mui-icon-arrowdown"></span></a>
 			<!--<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>-->
 			<!--个人中心-->
 			<a id="headImg" class="mui-icon mui-pull-left" @tap="openCenter">
@@ -266,6 +266,17 @@
 					}
 					var als_detail = plus.webview.getWebviewById('bl-analysis-detail');
 					als_detail && mui.fire(als_detail, "refresh");
+					// 检测目录是否完成
+					console.log(JSON.stringify(e.detail))
+					if(e.detail.hasOwnProperty("isFinish")){
+						e.detail.isFinish && readTree(testMenu.menu, function(node){
+							if(node.id==e.detail.nodeId){
+								node.is_finish=1;
+							}
+						});
+					}else{
+						header.setMenu({percode: header.grade.selected, subcode: header.subject.selected});
+					}
 				});
 				
 				//双击退出
@@ -321,40 +332,8 @@
 						header.headImg = e.detail.imgurl;
 					});
 					
-					//用户已订购套餐及功能扩展栏目
-					function getUserBusFunc() {
-						var enData1 = {};
-						//不需要加密的数据
-						var comData1 = {
-							uuid: deviceParam.uuid, //用户设备号
-							uid: userInfo.uid, //用户账号
-							utoken: userInfo.utoken, //用户令牌
-							appid: deviceParam.appid //系统所分配的应用ID
-						}
-						plus.nativeUI.showWaiting();
-						//发送网络请求，data为网络返回值
-						postDataEncry('GetUserBusFunc', enData1, comData1, 0, function(data1) {
-							console.log('GetUserBusFunc:' + JSON.stringify(data1));
-							plus.nativeUI.closeWaiting();
-							if(data1.RspCode == 0) {
-								if(data1.RspData) {
-									userInfo.packageCount = data1.RspData.userbus.length; //套餐是否绑定学生
-									store.set(window.storageKeyName.PERSONALINFO, userInfo);
-									if(userInfo.packageCount > 0 ) {
-										
-									} else {
-										
-									}
-								} else {
-									userInfo.packageCount = 0; //套餐是否绑定学生
-									store.set(window.storageKeyName.PERSONALINFO, userInfo);
-	//								contentData.showFlag = 1;
-								}
-							} else {
-								mui.toast(data1.RspTxt);
-							}
-						});
-					}
+					//用户已订购套餐
+					// getUserBusFunc();
 					
 				}
 				
@@ -397,6 +376,7 @@
 					showItem: false
 				},
 				computed: {
+					// 下拉列表选项
 					item: function() {
 						if(this.topPannel==1){
 							return this.grade;
@@ -406,10 +386,12 @@
 							return {selected: 0, list: []};
 						}
 					},
+					// 已选年级
 					gradeItem: function() {
 						var selected = this.grade.list?filterArray(this.grade.list, "percode", this.grade.selected)[0]:null;
 						return selected;
 					},
+					// 已选科目
 					subjectItem: function() {
 						var selected = this.subject.list?filterArray(this.subject.list, "subcode", this.subject.selected)[0]:null;
 						return selected;
@@ -513,7 +495,7 @@
 							type: 'get',
 							timeout: 5000,
 							success: function(res) {
-								// console.log(res);
+								console.log("难度等级："+JSON.stringify(res.data));
 								var res_data = res.data;
 								mui.fire(test_start, "getData", {
 									title: model.name, 
@@ -547,6 +529,7 @@
 					subRadar = echarts.init(document.getElementById("subRadar"));
 				},
 				methods: {
+					// 学情分析详情
 					goDetail: function(item) {
 						mui.openWindow({
 							url:"analysisDetail.html",
@@ -643,6 +626,79 @@
 				            }
 				        }
 					]
+				});
+			}
+			
+			// 用户已订购套餐及功能扩展栏目
+			function getUserBusFunc() {
+				var personal = store.get(window.storageKeyName.PERSONALINFO);
+				var publicParameter = store.get(window.storageKeyName.PUBLICPARAMETER);
+				var enData1 = {};
+				//不需要加密的数据
+				var comData1 = {
+					uuid: publicParameter.uuid, //用户设备号
+					uid: personal.uid, //用户账号
+					utoken: personal.utoken, //用户令牌
+					appid: publicParameter.appid //系统所分配的应用ID
+				}
+				events.showWaiting();
+				//发送网络请求，data为网络返回值
+				postDataEncry('GetUserBusFunc', enData1, comData1, 0, function(data1) {
+					console.log('用户已订购套餐: ');
+					console.log(data1);
+					events.closeWaiting();
+					if(data1.RspCode == 0) {
+						var userbus = [];//此应用的套餐
+						var busext = [];//学段年级信息
+						// 筛选此应用的套餐
+						for(var i = 0; i < data1.RspData.userbus.length; i++) {
+							var thisUserbus = data1.RspData.userbus[i];
+							var userbusFuncs = thisUserbus.funcs;//套餐功能表
+							var fcodes = [];
+							// 判断是否有相符功能
+							for(var j=0; j<userbusFuncs.length; j++) {
+								if(userbusFuncs[j].ftype==window.storageKeyName.FUNCTYPES) {
+									// 判断是否过时
+									if(compareDate(thisUserbus.etime,getNowFormatDate("."))>=0) {
+										userbus.push(thisUserbus);
+										fcodes.push(userbusFuncs[j].fcode);
+									}
+								}
+							}
+							// 筛选相符功能的附加信息
+							for(var k=0; k<thisUserbus.busext.length; k++) {
+								if(fcodes.indexOf(thisUserbus.busext[k].fcode) != -1){
+									busext.push(thisUserbus.busext[k]);
+								}
+							}
+						}
+						personal.userbus = userbus; // 绑定的套餐
+						store.set(window.storageKeyName.PERSONALINFO, personal);
+						// 判断有没有订购套餐
+						if(personal.userbus.length){
+							console.log(busext);
+							header.subject.list = [];
+							header.grade.list = [];
+							busext.forEach(function(v){
+								var sons = v.itemsons.split("|");
+								if(v.itemcode=="sub"){
+									header.subject.list.push({subname: sons[1], subcode: sons[0]});
+								}
+								if(v.itemcode=="prd") {
+									header.grade.list.push({pername: sons[1], percode: sons[0]});
+								}
+							});
+							header.setMenu({percode: header.grade.list[0].percode, subcode: header.subject.list[0].subcode});
+						}else{
+							mui.confirm('是否前往订购', '没有可用套餐', ["不去","去订购"], function(e) {
+								if (e.index == 1) {
+									mui.openWindow("../../html/order/orderList.html");
+								}
+							});
+						}
+					} else {
+						mui.toast(data1.RspTxt);
+					}
 				});
 			}
 			

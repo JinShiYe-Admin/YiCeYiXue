@@ -7,7 +7,6 @@ if(window.plus){
 } 
 
 //休眠方法，numberMillis间隔毫秒数，1000*秒*分*时*天*年
-var ver;
 function sleep(numberMillis) {
     var now = new Date();
     var exitTime = now.getTime() + numberMillis;
@@ -19,11 +18,11 @@ function sleep(numberMillis) {
 }
 
 function plusReady(){ 
+	var url= severUlr+'version/gainApkVersion'; //版本检测url
+	var ver; //版本号
 	// 获取本地应用资源版本号
     plus.runtime.getProperty(plus.runtime.appid, function(inf) {
             ver = inf.version;
-            var url= severUlr+'version/gainApkVersion'; //版本检测url
-            var client;
             var ua = navigator.userAgent.toLowerCase();
             if(/iphone|ipad|ipod/.test(ua)) {    //苹果手机            
                 $.ajax({

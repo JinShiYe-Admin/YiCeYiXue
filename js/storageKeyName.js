@@ -3,7 +3,7 @@
 var storageKeyName = (function(mod) {
 
 	mod.key = 0; //0,开发;1,部署外网
-	mod.pay = 0; //0,单个商家接口;1,多商家接口
+	mod.pay = 1; //0,单个商家接口;1,多商家接口
 	var exLog = console.log;
 	console.log = function(hint, object) {
 		if(mod.key === 0) {
@@ -21,7 +21,7 @@ var storageKeyName = (function(mod) {
 			mod.INTERFACEGU = 'https://zhxy.jiaobaowang.net:8515/schadminwebapi/api/data/';//顾工接口
 			mod.INTERFACEKONG = 'https://jbyj.jiaobaowang.net:8443/SchoolCommunicationService/';//孔工接口
 			mod.TEACHERIMG = 'https://zhxy.jiaobaowang.net:8515/schadminwebadmin/upuserimg.ashx?userid='; //老师上传头像
-//			mod.ANDROIDUPDATEURL='http://zhxy.jiaobaowang.net:8015/appupdate/xxt/versionCode.xml';//安卓升级地址
+			mod.ANDROIDUPDATEURL='http://zhxy.jiaobaowang.net:8015/appupdate/xxt/versionCode.xml';//安卓升级地址
 
 			mod.ALIPAYSERVER='http://192.168.1.121:8081/app/versionCode.xml';//支付宝支付地址
 			if(mod.pay==0) {//单商家
@@ -43,8 +43,8 @@ var storageKeyName = (function(mod) {
 			
 			//益测益学服务端地址
 			//本地：http://192.168.0.125:8080/yiceyixue; 开发：http://139.129.252.49:8080/yiceyixue;
-			mod.YCYXHOST = "http://192.168.0.125:8080/yiceyixue";
-			// mod.YCYXHOST = "http://139.129.252.49:8080/yiceyixue";
+			// mod.YCYXHOST = "http://192.168.0.125:8080/yiceyixue";
+			mod.YCYXHOST = "http://139.129.252.49:8080/yiceyixue";
 			break;
 		
 		case 1://正式
