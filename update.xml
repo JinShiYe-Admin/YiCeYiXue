@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<school>
+<school_id>100102</school_id>
+<update_info>
+	<new_version>10.0.0</new_version>
+	<delta></delta>
+	<download_url>url</download_url>
+	<update_log></update_log>
+</update_info>
+</school>
