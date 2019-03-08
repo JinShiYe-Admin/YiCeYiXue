@@ -62,7 +62,7 @@
                 "payment" : {
                     "weixin" : {
                         "description" : "微信支付",
-                        "appid" : "wx272c9b4a4ac2e9ac"
+                        "appid" : "wx8e01f449f326ee76"
                     }
                 },
                 "speech" : {

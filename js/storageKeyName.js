@@ -25,8 +25,8 @@ var storageKeyName = (function(mod) {
 
 			mod.ALIPAYSERVER='http://192.168.1.121:8081/app/versionCode.xml';//支付宝支付地址
 			if(mod.pay==0) {//单商家
-				mod.WXPAYSERVER='http://jsypay.jiaobaowang.net/jsypay/wxpay/sys/AppServer.aspx';//微信支付地址
-				mod.SEARCHPAYSESULT='http://jsypay.jiaobaowang.net/jsypay/wxpay/sys/PcQRCode.aspx';//获取支付结果的地址
+				mod.WXPAYSERVER='http://jsypay.jiaobaowang.net/jsypaym/wxpay/sys/AppServer.aspx';//微信支付地址
+				mod.SEARCHPAYSESULT='http://jsypay.jiaobaowang.net/jsypaym/wxpay/sys/PcQRCode.aspx';//获取支付结果的地址
 			}else if(mod.pay==1){//多商家
 				mod.WXPAYSERVER='http://jsypay.jiaobaowang.net/jsypaym/wxpay/sys/AppServer.aspx';//微信支付地址
 				mod.SEARCHPAYSESULT='http://jsypay.jiaobaowang.net/jsypaym/wxpay/sys/PcQRCode.aspx';//获取支付结果的地址
