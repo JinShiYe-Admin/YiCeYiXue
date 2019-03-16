@@ -100,10 +100,15 @@ function reload() {
 }
 
 // 获取套餐学段名
-function getPrdName(fx) {
+function getPrdName(ext, fcodes) {
 	var names = [];
-	fx && fx.forEach(function(v){
-		if(v.itemcode=="prd"){
+	ext && ext.forEach(function(v){
+		if(fcodes && v.fcode) {
+			var itemCase = v.itemcode=="prd"&&fcodes.indexOf(v.fcode)!=-1;
+		}else{
+			var itemCase = v.itemcode=="prd";
+		}
+		if(itemCase){
 			var values = v.itemsons.split(",");
 			for(var i=0;i<values.length;i++){
 				var fv = values[i].split("|").pop();
@@ -190,8 +195,8 @@ function filterArray(arr, key, val) {
 function readTree(tree, callback) {
     for (var i = 0; i < tree.length; i++) {
         callback(tree[i]);
-        if(tree[i].childList) {
-            readTree(tree[i].childList, callback);
+        if(tree[i].children) {
+            readTree(tree[i].children, callback);
         }
     }
 }

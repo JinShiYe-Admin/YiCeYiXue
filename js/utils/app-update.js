@@ -3,9 +3,8 @@
  */
 var appUpdate = (function(mod) {
 	
-	// mod.androidUpdateUrl=window.storageKeyName.ANDROIDUPDATEURL;
-	mod.androidUpdateUrl = "../../update.xml"; //安卓更新信息
-	mod.iosUpdateUrl = "https://itunes.apple.com/lookup?id=111030274";//获取当前上架APPStore版本信息
+	mod.androidUpdateUrl = window.storageKeyName.ANDROIDUPDATEURL; //安卓更新信息
+	mod.iosUpdateUrl = "https://itunes.apple.com/lookup?id=111030274"; //获取当前上架APPStore版本信息
 	mod.iosDownloadUrl = "https://itunes.apple.com/cn/app/san-gu-hui/id111030274?mt=8"; //APPStore下载地址
 	var appName = "益测易学";
 	
@@ -61,6 +60,7 @@ var appUpdate = (function(mod) {
 	
 	//获取android 更新信息
 	function getXml(school_id){
+		console.log("获取android 更新信息")
 		$.ajax({
 		    url:mod.androidUpdateUrl,
 		    type: 'GET',
@@ -73,7 +73,7 @@ var appUpdate = (function(mod) {
 	        success: function(xml){ 
 	            $(xml).find("school").each(function(i){
 	            	var school_id_text=$(this).children("school_id").text();
-	          		if(school_id==school_id_text){
+	          		if(school_id==school_id_text||school_id_text=="0"){
 			          	var update_info=$(this).children("update_info");
 				        var info={
 				        	version:update_info.children("new_version").text()
@@ -159,6 +159,7 @@ var appUpdate = (function(mod) {
 
 			} else if(appVersionMinMax.max == newestVersionMinMax.max) {
 				if(appVersionMinMax.min < newestVersionMinMax.min) { //在线更新
+					console.log("在线更新");
 					resolveFile(versionInfo.download_url, 0);
 				}
 			}

@@ -193,7 +193,10 @@
 			//获取分析数据
 			function getSubDetail() {
 				commonAjax("/Ycyx/Analysis/subDetail", {
-					data: {subcode: self.subcode},
+					data: {
+						subcode: self.subcode,
+						percode: self.percode
+					},
 					success: function(res){
 						var data = JSON.parse(res.data);
 						analysisDetail.subScores = data.subScores;

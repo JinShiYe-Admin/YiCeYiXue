@@ -4,10 +4,13 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
 		<style type="text/css">
+			body {
+				height: auto;
+			}
 			#register {
 				padding-left: 0.15rem;
 				padding-right: 0.15rem;
@@ -154,7 +157,7 @@
 	</body>
 	<script src="../../js/mui.min.js"></script>
 	<script type="text/javascript" src="../../js/utils/vue.js" ></script>
-	<!--<script type="text/javascript" src="../../js/utils/vconsole.min.js" ></script>-->
+	<script type="text/javascript" src="../../js/utils/vconsole.min.js" ></script>
 	<script src='../../js/libs/jquery.js'></script>
 	
 	<!--加密-->
@@ -294,7 +297,7 @@
 						postDataEncry('UserReg', enData0, comData0, 0, function(data) {
 							console.log('UserReg:' + JSON.stringify(data));
 							events.closeWaiting();
-							if(data.RspCode == 0) {
+							if(data.RspCode == "0000") {
 								mui.toast('注册成功');
 								params.phoneNumber = '';
 								params.idenCode = '';

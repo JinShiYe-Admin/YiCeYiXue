@@ -43,7 +43,7 @@ body {
 	color: #3C9DFB;
 	background: none!important;
 }
-.mui-bar-tab .mui-tab-item.mui-active, .btn-bottom {
+.mui-bar-tab .mui-tab-item.mui-active, .btn-bottom, .btn-bottom:active {
 	color: #3C9DFB;
 }
 .options-pannel label.selected {
@@ -66,6 +66,10 @@ body, .mui-content {
 .mui-content::-webkit-scrollbar {
 	display: none;
 }
+.mui-popup-button {
+	color: #3C9DFB;
+}
+
 /*沉浸式导航栏*/
 .mui-bar-nav {
 	height: auto;
@@ -88,7 +92,8 @@ body, .mui-content {
 .mui-bar-nav.mui-bar .mui-icon, .mui-bar-nav .mui-title {
 	line-height: 44px;
 } */
-/*沉浸式导航栏-end*/
+/*非沉浸式导航栏-end*/
+
 .mui-bar-tab~.mui-content {
 	padding-bottom: 1rem;
 }
@@ -251,6 +256,7 @@ body, .mui-content {
 .same-line-list:before, .same-line-list:after, .same-line-list li:after {
 	left: 0.2rem;
 	right: 0.2rem;
+	z-index: 2;
 }
 ul li.navigate-right:before {
 	right: 0.2rem;
@@ -387,7 +393,8 @@ ul li.navigate-right:before {
 }
 .beforeLeaveDialog .layui-layer-btn .layui-layer-btn0 {
 	order: 2;
-	background-color: #007AFF;
+	background-color: #3C9DFB;
+	border-color: #3C9DFB;
 }
 
 /*文本渲染*/
@@ -587,36 +594,38 @@ ul li.navigate-right:before {
 	display: none;
 }
 .als-list li {
-	display: flex;
-	justify-content: space-between;
+	/* display: flex; */
+	/* justify-content: space-between; */
 	padding: 0.3rem 0.6rem 0.3rem 0.2rem;
 	line-height: 0.64rem;
 }
 .als-list li:first-child {
 	padding-bottom: 0.15rem;
 }
+.als-list li > div {
+	display: inline-block;
+}
 ul.als-list li .sub {
 	padding-left: 1.1rem;
 	vertical-align: middle;
+	position: relative;
 }
 ul.als-list li .sub .label {
-	display: inline-block;
-	text-align: center;
-	border: 1px solid #25AE38;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+	border: 2px solid #25AE38;
 	color: #25AE38;
-	border-radius: 4px;
-	vertical-align: middle;
-	margin-top: -3px;
+	border-radius: 5px;
 	width: 1.2rem;
 	height: .64rem;
-	line-height: .64rem;
 	font-size: 150%;
-	margin-left: -1.6rem;
-	margin-right: 0.4rem;
 	-webkit-transform: scale(0.5);
 	transform: scale(0.5);
-	-webkit-transform-origin: 150% 50%;
-	transform-origin: 150% 50%;
+	position: absolute;
+	left: 0;
+	top: 50%;
+	margin-top: -0.32rem;
 }
 ul.als-list li .sub .label.bad {
 	color: #DB4848;

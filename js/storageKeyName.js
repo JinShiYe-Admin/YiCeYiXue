@@ -21,7 +21,7 @@ var storageKeyName = (function(mod) {
 			mod.INTERFACEGU = 'https://zhxy.jiaobaowang.net:8515/schadminwebapi/api/data/';//顾工接口
 			mod.INTERFACEKONG = 'https://jbyj.jiaobaowang.net:8443/SchoolCommunicationService/';//孔工接口
 			mod.TEACHERIMG = 'https://zhxy.jiaobaowang.net:8515/schadminwebadmin/upuserimg.ashx?userid='; //老师上传头像
-			mod.ANDROIDUPDATEURL='http://zhxy.jiaobaowang.net:8015/appupdate/xxt/versionCode.xml';//安卓升级地址
+			mod.ANDROIDUPDATEURL='https://zhxy.jiaobaowang.net:8515/yiceyixueapp/versionCode.xml';//安卓升级地址
 
 			mod.ALIPAYSERVER='http://192.168.1.121:8081/app/versionCode.xml';//支付宝支付地址
 			if(mod.pay==0) {//单商家
@@ -65,6 +65,7 @@ var storageKeyName = (function(mod) {
 	
 	//套餐功能类型，多个之间用英文逗号隔开
 	mod.FUNCTYPES = 'ycyx'; 
+	// mod.FUNCTYPES = 'YCYXZS';
 	
 	mod.BADGENUMBER = 'badgeNumber';//app角标
 	mod.PUBLICPARAMETER = 'publicParameter';//共用参数

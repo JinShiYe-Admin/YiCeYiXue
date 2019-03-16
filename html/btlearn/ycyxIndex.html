@@ -58,6 +58,10 @@
 				max-height: 100%;
 				overflow-y: auto;
 			}
+			.mui-android #bl-analysis .mui-table-view-cell:after, .mui-android #bl-analysis .same-line-list:after {
+				transform: none;
+				bottom: 1px;
+			}
 		</style>
 	</head>
 
@@ -229,7 +233,8 @@
 		<script type="text/javascript" src="../../js/btlearn/common.js"></script>
 		<script src="../../js/utils/app-update.js"></script>
 		<script type="text/javascript">
-			var self, bookMenuView, center, test_start;
+			var self, center, test_start;
+			var prdLimit = []; //学段限权
 			
 			//认证信息
 			var userInfo = store.get(window.storageKeyName.PERSONALINFO);
@@ -248,9 +253,6 @@
 				if(plus.navigator.isImmersedStatusbar()){
 					plus.navigator.setStatusBarStyle('light');
 				}
-				
-				//最初数据， 获取目录
-				header.setMenu();
 				
 				//开始测试页
 				test_start = mui.preload({
@@ -334,11 +336,18 @@
 					});
 					
 					//用户已订购套餐
-					// getUserBusFunc();
+					getUserBusFunc();
+					// 刷新套餐
+					window.addEventListener("refreshBusFunc", function(e){
+						getUserBusFunc();
+					});
+				}else{
+					//最初数据， 获取目录
+					header.setMenu();
 				}
 				
 				// 版本更新
-				// appUpdate.updateApp(userInfo.schid);
+				appUpdate.updateApp(userInfo.schid);
 				
 			});
 			
@@ -417,6 +426,7 @@
 						testMenu.isLoaded = false;
 						plus.nativeUI.showWaiting();
 						var _this = this;
+						console.log("/Ycyx/Practice/index参数："+JSON.stringify(data||{}));
 						//获取目录
 						commonAjax("/Ycyx/Practice/index", {
 							data: data||{},
@@ -433,7 +443,7 @@
 								//学段
 								_this.grade = {
 									selected: rdata.percode,
-									list: rdata.pers||[]
+									list: prdLimit.length?prdLimit:(rdata.pers||[])
 								}
 								//设置test-menu目录
 								testMenu.menu = rdata.catalogs||[];
@@ -539,7 +549,8 @@
 							id: "bl-analysis-detail",
 							extras: {
 								subcode: item.subcode,
-								subname: item.subname
+								subname: item.subname,
+								percode: header.grade.selected||""
 							}
 						})
 					}
@@ -550,6 +561,9 @@
 			function getAnalysisData() {
 				plus.nativeUI.showWaiting();
 				commonAjax("/Ycyx/Analysis/index", {
+					data: {
+						percode: header.grade.selected||""
+					},
 					success: function(res){
 						console.log(res.data);
 						var res_data = JSON.parse(res.data);
@@ -636,73 +650,114 @@
 			function getUserBusFunc() {
 				var personal = store.get(window.storageKeyName.PERSONALINFO);
 				var publicParameter = store.get(window.storageKeyName.PUBLICPARAMETER);
-				var enData1 = {};
-				//不需要加密的数据
-				var comData1 = {
+				var userbus = []; //已购买的益测易学套餐
+				
+				// 获取益测易学套餐
+				var enData = {};
+				var comData = {
 					uuid: publicParameter.uuid, //用户设备号
-					uid: personal.uid, //用户账号
+					bustp: '0', //套餐类型,0全部,1基本套餐,2CP套餐
 					utoken: personal.utoken, //用户令牌
-					appid: publicParameter.appid //系统所分配的应用ID
-				}
+					appid: publicParameter.appid, //系统所分配的应用ID
+					functypes: window.storageKeyName.FUNCTYPES
+				};
 				events.showWaiting();
-				//发送网络请求，data为网络返回值
-				postDataEncry('GetUserBusFunc', enData1, comData1, 0, function(data1) {
-					console.log('用户已订购套餐: ');
-					console.log(data1);
-					events.closeWaiting();
-					if(data1.RspCode == 0) {
-						var userbus = [];//此应用的套餐
-						var busext = [];//学段年级信息
-						// 筛选此应用的套餐
-						for(var i = 0; i < data1.RspData.userbus.length; i++) {
-							var thisUserbus = data1.RspData.userbus[i];
-							var userbusFuncs = thisUserbus.funcs;//套餐功能表
-							var fcodes = [];
-							// 判断是否有相符功能
-							for(var j=0; j<userbusFuncs.length; j++) {
-								if(userbusFuncs[j].ftype==window.storageKeyName.FUNCTYPES) {
-									// 判断是否过时
-									if(compareDate(thisUserbus.etime,getNowFormatDate("."))>=0) {
-										userbus.push(thisUserbus);
-										fcodes.push(userbusFuncs[j].fcode);
+				postDataEncry('SysBusType', enData, comData, 0, function(data) {
+					console.log("益测易学套餐："); console.log(data); 
+					if(data.RspCode == 0) {
+						var sysbus = data.RspData?data.RspData.sysbus:[];
+						
+						// 获取已购买的套餐
+						var enData1 = {};
+						var comData1 = {
+							uuid: publicParameter.uuid, //用户设备号
+							uid: personal.uid, //用户账号
+							utoken: personal.utoken, //用户令牌
+							appid: publicParameter.appid //系统所分配的应用ID
+						}
+						postDataEncry('GetUserBusFunc', enData1, comData1, 0, function(data1) {
+							console.log("获取用户已经购买套餐："); console.log(data1);
+							events.closeWaiting();
+							if(data1.RspCode == 0) {
+								var busext = []; //已购买的益测易学套餐的 可用的 功能信息
+								var disabledCount = 0; //不可用套餐数
+								// 筛选已购买的益测易学套餐
+								for(var i = 0; i < sysbus.length; i++) {
+									// 添加套餐益测易学功能的fcode
+									sysbus[i].funcs.forEach(function(v){
+										if(v.ftype==window.storageKeyName.FUNCTYPES) {
+											sysbus[i].thiscodes = sysbus[i].thiscodes?sysbus[i].thiscodes+","+v.fcode:v.fcode;
+										}
+									});
+									var data_userbus = data1.RspData?data1.RspData.userbus:[];
+									for(var a = 0; a < data_userbus.length; a++) {
+										var userBusModel = data_userbus[a];
+										// 判断是否为同一套餐，并检查是否过时
+										if(sysbus[i].serviceid==userBusModel.servid) {
+											userbus.push($.extend(sysbus[i], userBusModel));
+											// 判断已订购套餐是否过期
+											if(compareDate(userBusModel.etime,getNowFormatDate("."))>=0){
+												userBusModel.busext.forEach(function(v){
+													if(sysbus[i].thiscodes.indexOf(v.fcode)!=-1){ //判断是否为益测易学功能
+														busext.push(v);
+													}
+												});
+											}else{
+												disabledCount++;
+											}
+											break;
+										}
 									}
 								}
+								personal.userbus = userbus; // 绑定套餐
+								store.set(window.storageKeyName.PERSONALINFO, personal);
+								// 根据 已订购的益测易学套餐 进行限权
+								if(personal.userbus.length){
+									header.subject.list = [];
+									header.grade.list = [];
+									prdLimit = [];
+									if(busext.length){
+										// 获取可用的功能信息的学段信息
+										console.log("功能信息:");console.log(busext);
+										busext.forEach(function(v){
+											var sons = v.itemsons.split("|");
+											if(v.itemcode=="prd") {
+												header.grade.list.push({pername: sons[1], percode: sons[0]});
+												prdLimit.push({pername: sons[1], percode: sons[0]});
+											}
+										});
+										var mdata = {};
+										if(header.grade.list[0]) mdata["percode"] = header.grade.list[0].percode;
+										// if(header.subject.list[0]) mdata["subcode"] = header.subject.list[0].subcode;
+										header.setMenu(mdata);
+										// 套餐过期提醒
+										if(disabledCount){
+											mui.confirm('是否前往续订', '有 '+disabledCount+' 个套餐已过期', ["不去","去续订"], function(e) {
+												if (e.index == 1) mui.openWindow("../../html/order/orderList.html");
+											}, 'div');
+										}
+									}else{
+										mui.alert('请前往续订','无可用套餐','去续订',function (e) {
+										   mui.openWindow("../../html/order/orderList.html");
+										},'div');
+									}
+								}else{
+									// 无套餐时
+									mui.alert('请先订购套餐，订购后才能组卷测试！','您尚未订购套餐','去订购',function (e) {
+										mui.openWindow("../../html/order/orderList.html");
+									},'div');
+								}
+							}else{
+								mui.toast(data1.RspTxt);
 							}
-							// 筛选相符功能的附加信息
-							for(var k=0; k<thisUserbus.busext.length; k++) {
-								if(fcodes.indexOf(thisUserbus.busext[k].fcode) != -1){
-									busext.push(thisUserbus.busext[k]);
-								}
-							}
-						}
-						personal.userbus = userbus; // 绑定的套餐
-						store.set(window.storageKeyName.PERSONALINFO, personal);
-						// 判断有没有订购套餐
-						if(personal.userbus.length){
-							console.log(busext);
-							header.subject.list = [];
-							header.grade.list = [];
-							busext.forEach(function(v){
-								var sons = v.itemsons.split("|");
-								if(v.itemcode=="sub"){
-									header.subject.list.push({subname: sons[1], subcode: sons[0]});
-								}
-								if(v.itemcode=="prd") {
-									header.grade.list.push({pername: sons[1], percode: sons[0]});
-								}
-							});
-							header.setMenu({percode: header.grade.list[0].percode, subcode: header.subject.list[0].subcode});
-						}else{
-							mui.confirm('是否前往订购', '没有可用套餐', ["不去","去订购"], function(e) {
-								if (e.index == 1) {
-									mui.openWindow("../../html/order/orderList.html");
-								}
-							});
-						}
-					} else {
-						mui.toast(data1.RspTxt);
+						});
+						
+					}else{
+						events.closeWaiting();
+						mui.toast(data.RspTxt);
 					}
 				});
+				
 			}
 			
 			// analysis.alsList = [{"subname":"语文","count":52,"subcode":"01","remark":"-1","avg_score":14},{"subname":"语文","count":52,"subcode":"01","remark":"0","avg_score":14}];
