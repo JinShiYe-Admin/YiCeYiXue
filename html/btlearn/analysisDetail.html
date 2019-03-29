@@ -114,7 +114,7 @@
 		
 		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript" src="../../js/utils/vue.js" ></script>
-		<!--<script type="text/javascript" src="../../js/utils/vconsole.min.js" ></script>-->
+		<!-- <script type="text/javascript" src="../../js/utils/vconsole.min.js" ></script> -->
 		<script type="text/javascript" src="../../js/libs/echarts.min.js" ></script>
 		<script src='../../js/libs/jquery.js'></script>
 		
@@ -174,6 +174,15 @@
 //								title: item.name
 //							}
 //						});
+						var userbus = store.get(window.storageKeyName.PERSONALINFO).userbus;
+						if(!userbus.length) {
+							mui.toast("未订购套餐，订购后才能练习");
+							return false;
+						}
+						if(!self.prdLimit.length) {
+							mui.toast("当前套餐不可用");
+							return false;
+						}
 						newTest(item.book_catalog_id, item.name);
 					}
 				}
@@ -195,7 +204,7 @@
 				commonAjax("/Ycyx/Analysis/subDetail", {
 					data: {
 						subcode: self.subcode,
-						percode: self.percode
+						percode: self.percode||""
 					},
 					success: function(res){
 						var data = JSON.parse(res.data);

@@ -161,7 +161,7 @@
 						<div class="mui-input-row line">
 							<a class="">
 								<label>订购学段</label>
-								<input  type="button" :value="getPrdName(orderDetail.busext, orderDetail.thiscodes).join()" disabled/>
+								<input  type="button" :value="getPrdName(orderDetail.busext, orderDetail.thiscodes).join()||'无学段'" disabled/>
 							</a>
 						</div>
 						<div class="mui-input-row line">
@@ -340,7 +340,7 @@
 				
 				//计算可以订购的时长  为月份数组 start
 				timePicker = new mui.PopPicker();
-				univlent = _data.feecode;
+				univlent = _data.feecode/_data.busmonth;
 				var month = _data.busmonth;
 				var num = 36 / month;
 				for (var i = 1; i <= num; i++) {
@@ -360,7 +360,7 @@
 						if (e.index == 1) {
 							reCheck();
 						} 
-					})
+					}, 'div');
 				},function(e){//查询超时
 					reCheck();
 				})

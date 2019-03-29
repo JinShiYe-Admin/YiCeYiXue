@@ -45,6 +45,7 @@ var storageKeyName = (function(mod) {
 			//本地：http://192.168.0.125:8080/yiceyixue; 开发：http://139.129.252.49:8080/yiceyixue;
 			// mod.YCYXHOST = "http://192.168.0.125:8080/yiceyixue";
 			mod.YCYXHOST = "http://139.129.252.49:8080/yiceyixue";
+			// mod.YCYXHOST = "https://gxcs.jiaobaowang.net/yiceyixue";
 			break;
 		
 		case 1://正式

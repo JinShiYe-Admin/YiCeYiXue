@@ -83,6 +83,7 @@ var appPay = (function(mod) {
 					console.log(JSON.stringify(mod.channel))
 					plus.payment.request(mod.channel, data, function(result) {
 						console.log('result=' + JSON.stringify(result));
+						success();
 	//					alert("result=" + JSON.stringify(result));
 	//					plus.nativeUI.alert("支付成功！", function() {
 	//						success;
@@ -91,7 +92,7 @@ var appPay = (function(mod) {
 						console.log('error' + JSON.stringify(error));
 						plus.nativeUI.alert("支付失败");	
 						
-//						fail(1,JSON.stringify(error));
+						fail(1,JSON.stringify(error));
 					});
 			} else {
 

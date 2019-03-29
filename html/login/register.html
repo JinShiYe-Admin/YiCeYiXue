@@ -4,13 +4,13 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
 		<style type="text/css">
-			body {
+			/* html, body {
 				height: auto;
-			}
+			} */
 			#register {
 				padding-left: 0.15rem;
 				padding-right: 0.15rem;
@@ -109,50 +109,52 @@
 			<h1 class="mui-title">注册</h1>
 		</header>
 		<div id="register" class="mui-content">
-			<form id="registerForm" class="register-form">
-				<div class="mui-input-row">
-					<label>
-						<image src="../../img/register/phone.png" class="icon"/>
-					</label>
-					<input id='phoneNumber' maxlength="11" name='phoneNumber' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号">
+			<!-- <div class="mui-content-padded"> -->
+				<form id="registerForm" class="register-form">
+					<div class="mui-input-row">
+						<label>
+							<image src="../../img/register/phone.png" class="icon"/>
+						</label>
+						<input id='phoneNumber' maxlength="11" name='phoneNumber' type="text" class="mui-input-clear mui-input" placeholder="请输入手机号">
+					</div>
+				
+					<div class="mui-input-row ">
+						<label>
+							<image src="../../img/register/idencode.png" class="icon"/>
+						</label>
+						<input id='idenCode' maxlength="6" name="idenCode" type="text" class="mui-input-clear mui-input" placeholder="请输入验证码">
+						<button id='idenCodebtn' @click="getPhoneCode" type="button" class="mui-btn btn-theme-border">发送验证码</button>
+					</div>
+				
+					<div class="mui-input-row">
+						<label>
+							<image src="../../img/register/username.png" class="icon"/>
+						</label>
+						<input id='userName' maxlength="18" name="userName" type="text" class="mui-input-clear mui-input" placeholder="请输入昵称">
+					</div>
+				
+					<div class="mui-input-row">
+						<label>
+							<image src="../../img/register/password.png" class="icon"/>
+						</label>
+						<input id='password' maxlength="18" name="password" type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+					</div>
+					<div class="mui-input-row">
+						<label>
+							<image src="../../img/register/password.png" class="icon"/>
+						</label>
+						<input id='confirmPassword' maxlength="18" name="confirmPassword" type="password" class="mui-input-clear mui-input" placeholder="请再次输入密码">
+					</div>
+				</form>
+				<div class="check">
+					<div class="mui-checkbox mui-left">
+						<input @click="checked" id="checkBox" type="checkbox"/><label for="checkBox">我已阅读并接受</label>《<a href="javascript:;">注册协议</a>》
+					</div>
 				</div>
-
-				<div class="mui-input-row ">
-					<label>
-						<image src="../../img/register/idencode.png" class="icon"/>
-					</label>
-					<input id='idenCode' maxlength="6" name="idenCode" type="text" class="mui-input-clear mui-input" placeholder="请输入验证码">
-					<button id='idenCodebtn' @click="getPhoneCode" type="button" class="mui-btn btn-theme-border">发送验证码</button>
+				<div class="regbtnbox">
+					<button id='regbtn' @click="zhuce" :class="{'mui-disabled':isDisabled}" type="button" class="mui-btn mui-btn-primary btn-theme regbtn">立即注册</button>
 				</div>
-
-				<div class="mui-input-row">
-					<label>
-						<image src="../../img/register/username.png" class="icon"/>
-					</label>
-					<input id='userName' maxlength="18" name="userName" type="text" class="mui-input-clear mui-input" placeholder="请输入昵称">
-				</div>
-
-				<div class="mui-input-row">
-					<label>
-						<image src="../../img/register/password.png" class="icon"/>
-					</label>
-					<input id='password' maxlength="18" name="password" type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
-				</div>
-				<div class="mui-input-row">
-					<label>
-						<image src="../../img/register/password.png" class="icon"/>
-					</label>
-					<input id='confirmPassword' maxlength="18" name="confirmPassword" type="password" class="mui-input-clear mui-input" placeholder="请再次输入密码">
-				</div>
-			</form>
-			<div class="check">
-				<div class="mui-checkbox mui-left">
-					<input @click="checked" id="checkBox" type="checkbox"/><label for="checkBox">我已阅读并接受</label>《<a href="javascript:;">注册协议</a>》
-				</div>
-			</div>
-			<div class="regbtnbox">
-				<button id='regbtn' @click="zhuce" :class="{'mui-disabled':isDisabled}" type="button" class="mui-btn mui-btn-primary btn-theme regbtn">立即注册</button>
-			</div>
+			<!-- </div> -->
 		</div>
 	</body>
 	<script src="../../js/mui.min.js"></script>

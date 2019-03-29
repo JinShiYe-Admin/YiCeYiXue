@@ -130,7 +130,7 @@
 					<div class="kn-menu" v-cloak>
 						<tree-menu v-for="(model, i) in menu" :key="i" 
 						:model="model" :depth="0" :activeid="0" :hidefinish="false" @node-click="selectNode"></tree-menu>
-						<p v-if="!menu.length&&isLoaded"  style="padding: 0.3rem;">暂无目录</p>
+						<p v-if="emptyMsg"  style="padding: 0.3rem;">{{emptyMsg}}</p>
 					</div>
 				</div>
 			</div>
@@ -187,7 +187,7 @@
 			<!--学情分析-->
 			<div id="bl-analysis" class="mui-control-content">
 				<div id="analysisTab">
-					<div class="als-title mui-text-center mui-ellipsis">{{user_name}}学情分析报告</div>
+					<div class="als-title mui-text-center mui-ellipsis">{{user_name}}学情分析报告<span v-if="pername">（{{pername}}）</span></div>
 					<div style="padding: .2rem .22rem .15rem;">学科均衡:</div>
 					<div id="subRadar"></div>
 					<ul class="mui-table-view als-list same-line-list" v-if="alsList.length">
@@ -335,16 +335,16 @@
 						header.headImg = e.detail.imgurl;
 					});
 					
-					//用户已订购套餐
-					getUserBusFunc();
-					// 刷新套餐
-					window.addEventListener("refreshBusFunc", function(e){
-						getUserBusFunc();
-					});
-				}else{
-					//最初数据， 获取目录
-					header.setMenu();
 				}
+				
+				//最初数据，获取目录
+				// header.setMenu();
+				//用户已订购套餐
+				getUserBusFunc();
+				// 刷新套餐
+				window.addEventListener("refreshBusFunc", function(e){
+					getUserBusFunc();
+				});
 				
 				// 版本更新
 				appUpdate.updateApp(userInfo.schid);
@@ -368,9 +368,10 @@
 						break;
 					case "bl-analysis":
 						title = "学情分析";
-						if(!analysis.isShowed){
-							getAnalysisData();
-						}
+						getAnalysisData();
+// 						if(!analysis.isShowed){
+// 							getAnalysisData();
+// 						}
 						break;
 				}
 				header.title = title;
@@ -423,10 +424,11 @@
 					},
 					// 设置目录
 					setMenu: function(data) {
-						testMenu.isLoaded = false;
+						// testMenu.isLoaded = false;
+						testMenu.emptyMsg = "";
 						plus.nativeUI.showWaiting();
 						var _this = this;
-						console.log("/Ycyx/Practice/index参数："+JSON.stringify(data||{}));
+						console.log("获取目录参数："+JSON.stringify(data||{}));
 						//获取目录
 						commonAjax("/Ycyx/Practice/index", {
 							data: data||{},
@@ -443,11 +445,12 @@
 								//学段
 								_this.grade = {
 									selected: rdata.percode,
-									list: prdLimit.length?prdLimit:(rdata.pers||[])
+									list: prdLimit,
+									// list: rdata.pers||[]
 								}
 								//设置test-menu目录
 								testMenu.menu = rdata.catalogs||[];
-								testMenu.isLoaded = true;
+								// testMenu.isLoaded = true;
 								_this.$nextTick(function(){
 									plus.nativeUI.closeWaiting();
 								});
@@ -494,7 +497,13 @@
 				el: "#testMenu",
 				data: {
 					menu: [],
-					isLoaded: false
+					// isLoaded: false,
+					emptyMsg: "" //空目录提示
+				},
+				watch: {
+					'menu': function(v){
+						if(!v.length) this.emptyMsg="暂无目录";
+					}
 				},
 				methods: {
 					//选择节点
@@ -535,6 +544,7 @@
 				el: "#analysisTab",
 				data: {
 					user_name: "",
+					pername: "",
 					alsList: [],
 					isShowed: false
 				},
@@ -550,7 +560,8 @@
 							extras: {
 								subcode: item.subcode,
 								subname: item.subname,
-								percode: header.grade.selected||""
+								percode: header.grade.selected||"",
+								prdLimit: prdLimit //学段限权
 							}
 						})
 					}
@@ -568,6 +579,7 @@
 						console.log(res.data);
 						var res_data = JSON.parse(res.data);
 						analysis.alsList = res_data.analysis;
+						analysis.pername = header.gradeItem?header.gradeItem.pername:"";
 						getSubRadar();
 						if(!analysis.isShowed) analysis.isShowed = true;
 						plus.nativeUI.closeWaiting();
@@ -692,12 +704,12 @@
 									var data_userbus = data1.RspData?data1.RspData.userbus:[];
 									for(var a = 0; a < data_userbus.length; a++) {
 										var userBusModel = data_userbus[a];
-										// 判断是否为同一套餐，并检查是否过时
-										if(sysbus[i].serviceid==userBusModel.servid) {
+										// 判断是否为同一套餐，并检查是否停用
+										if(sysbus[i].serviceid==userBusModel.servid && userBusModel.serstat) {
 											userbus.push($.extend(sysbus[i], userBusModel));
 											// 判断已订购套餐是否过期
 											if(compareDate(userBusModel.etime,getNowFormatDate("."))>=0){
-												userBusModel.busext.forEach(function(v){
+												userBusModel.busext&&userBusModel.busext.forEach(function(v){
 													if(sysbus[i].thiscodes.indexOf(v.fcode)!=-1){ //判断是否为益测易学功能
 														busext.push(v);
 													}
@@ -711,6 +723,7 @@
 								}
 								personal.userbus = userbus; // 绑定套餐
 								store.set(window.storageKeyName.PERSONALINFO, personal);
+								console.log("已订购益测易学套餐: ");console.log(userbus);
 								// 根据 已订购的益测易学套餐 进行限权
 								if(personal.userbus.length){
 									header.subject.list = [];
@@ -720,15 +733,19 @@
 										// 获取可用的功能信息的学段信息
 										console.log("功能信息:");console.log(busext);
 										busext.forEach(function(v){
-											var sons = v.itemsons.split("|");
+											var sons = v.itemsons.split(",");
 											if(v.itemcode=="prd") {
-												header.grade.list.push({pername: sons[1], percode: sons[0]});
-												prdLimit.push({pername: sons[1], percode: sons[0]});
+												sons.forEach(function(s){
+													var ss = s.split("|");
+													//去重
+													if(!prdLimit.filter(function(p){return p.percode==ss[0];})[0]) { 
+														prdLimit.push({pername: ss[1], percode: ss[0]});
+													}
+												});
 											}
 										});
 										var mdata = {};
-										if(header.grade.list[0]) mdata["percode"] = header.grade.list[0].percode;
-										// if(header.subject.list[0]) mdata["subcode"] = header.subject.list[0].subcode;
+										if(prdLimit[0]) mdata["percode"] = prdLimit[0].percode;
 										header.setMenu(mdata);
 										// 套餐过期提醒
 										if(disabledCount){
@@ -740,12 +757,14 @@
 										mui.alert('请前往续订','无可用套餐','去续订',function (e) {
 										   mui.openWindow("../../html/order/orderList.html");
 										},'div');
+										testMenu.emptyMsg = "无可用套餐，请去续订或新订购套餐！";
 									}
 								}else{
 									// 无套餐时
 									mui.alert('请先订购套餐，订购后才能组卷测试！','您尚未订购套餐','去订购',function (e) {
 										mui.openWindow("../../html/order/orderList.html");
 									},'div');
+									testMenu.emptyMsg = "未订购套餐，请去个人中心订购套餐！";
 								}
 							}else{
 								mui.toast(data1.RspTxt);
@@ -761,7 +780,7 @@
 			}
 			
 			// analysis.alsList = [{"subname":"语文","count":52,"subcode":"01","remark":"-1","avg_score":14},{"subname":"语文","count":52,"subcode":"01","remark":"0","avg_score":14}];
-			
+			// header.subject = {"selected":"03","list":[{"subname":"英语","subcode":"03"},{"subname":"计算机应用基础","subcode":"25"}]};
 		</script>
 	</body>
 

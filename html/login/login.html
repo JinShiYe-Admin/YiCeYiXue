@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
 		<style type="text/css">
@@ -100,12 +100,12 @@
 	<script src="../../js/utils/store.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../../js/utils/events.js"></script>
 	<!--<script src='../../js/utils/sortSign.js'></script>-->
-	<!--<script src="../../js/utils/utils.js" type="text/javascript" charset="utf-8"></script>-->
+	<script src="../../js/utils/utils.js" type="text/javascript" charset="utf-8"></script>
 	<!--<script src="../../js/utils/storageutil.js" type="text/javascript" charset="utf-8"></script>-->
 	
 	<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
 	<script type="text/javascript">
-		var loginFlag = 1; //0自动登录，1不自动登录
+		var loginFlag = 0; //0自动登录，1不自动登录
 		mui.plusReady(function() {
 			plus.webview.currentWebview().setStyle({
 		        softinputMode: "adjustResize"
@@ -237,7 +237,7 @@
 					};
 					//登录
 					postDataEncry('Login', enData1, comData1, 0, function(data1) {
-						console.log("---登录成功---");
+						console.log("登录成功: "+JSON.stringify(data1));
 						events.closeWaiting();
 						if(data1.RspCode == 0) {
 							if(data1.RspData.dpts == null) {

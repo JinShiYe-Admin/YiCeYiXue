@@ -562,7 +562,7 @@ ul li.navigate-right:before {
 .options-pannel .radio-wrap {
 	display: block;
 	float: left;
-	width: 1.58rem;
+	min-width: 1.58rem;
 	height: 0.63rem;
 	line-height: 0.63rem;
 	margin-right: 0.26rem;
@@ -575,6 +575,7 @@ ul li.navigate-right:before {
 	border-radius: 0.05rem;
 	background-color: #F5F5F5;
 	font-size: 0.24rem;
+	padding: 0 4px;
 }
 .options-pannel label.selected {
 	color: #FFFFFF;
