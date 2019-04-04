@@ -26,16 +26,17 @@
 				margin-bottom: 5px;
 			}
 			.mui-row.mui-media {
-				padding: 10px 15px;
+				padding: 10px;
 			}
 			.flex-between .mui-media-object {
 				width: 90px;
 				height: 90px;
-				margin-right: 5px;
-				flex-shrink: 0;
 			}
 			.flex-between .mui-media-body {
-				flex-grow: 1;
+				width: calc(100% - 110px);
+			}
+			.mui-media-body > p {
+				margin-bottom: 5px;
 			}
 			.mui-media-body .mui-ellipsis-title + .mui-ellipsis-2 {
 				height: 42px;
@@ -62,7 +63,7 @@
 				border: 0px;
 				margin-top: 5px;
 				text-align: left;
-				padding-left: 10px;
+				padding-left: 0;
 			}
 			.mui-input-row .fee {
 				text-align: right; font-size: 15px;color: #666666;width: 100%;
@@ -124,7 +125,7 @@
 			}
 			.check > label {
 				padding-left: 45px;
-				margin-top: 8px;
+				margin-top: 6px;
 			}
 			.check > label a {
 				color: #00CFBD;
@@ -146,12 +147,10 @@
 		<div class="mui-content">
 			
 			<div id='orderDetailData'>
-				<div class="mui-row mui-media flex-between">
-					<img class="mui-media-object" :src="orderDetail.busimg" v-cloak>
-					<div class="mui-media-body" v-cloak>
-						<p class='mui-ellipsis-title'>{{orderDetail.cnname}}
-							<!-- <span v-for="pn in getPrdName(orderDetail.fext, orderDetail.thiscodes)" class="mark">{{pn}}</span> -->
-						</p>
+				<div class="mui-row mui-media flex-between" v-cloak>
+					<img class="mui-media-object" :src="orderDetail.busimg">
+					<div class="mui-media-body">
+						<p class='mui-ellipsis-title'>{{orderDetail.cnname}}</p>
 						<p class='mui-ellipsis-2'>{{orderDetail.busnote}}</p>
 						<p class="ul-p">缴费金额：{{orderPrice(orderDetail.feecode)}}元/{{orderDetail.busmonth}}月</p>
 					</div>
@@ -317,9 +316,14 @@
 							}else{
 								appPay.payCode=true;
 								//调起支付
+								plus.nativeUI.showWaiting( "正在调起支付" );
+								setTimeout(function(){
+									plus.nativeUI.closeWaiting();
+								}, 3000);
 								appPay.pay(appPay.wxpay,function success(){
+									plus.nativeUI.closeWaiting();
 								},function fail(code,err){
-									
+									plus.nativeUI.closeWaiting();
 								});
 							}
 						}
@@ -394,7 +398,7 @@
 						newEtime:orderDetailData.newEtime
 					});
 					// 刷新首页
-					mui.fire(plus.webview.getWebviewById("bl-index"),'refreshBusFunc');
+					// mui.fire(plus.webview.getWebviewById("bl-index"),'refreshBusFunc');
 					
 					mui.back();
 				},function fail(err){

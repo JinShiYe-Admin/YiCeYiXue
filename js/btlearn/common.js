@@ -18,7 +18,7 @@ function sendAjax(url, ops, times) {
 		uuid: publicParameter.uuid,
 		uid: personal.uid
 	});
-	mui.ajax(url, {
+	jQuery.ajax(url, {
 		data: data,
 		type: ops.type||"post",
 		timeout: ops.timeout||6000,

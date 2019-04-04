@@ -163,6 +163,11 @@
 						imgurl: data.detail.imgurl
 					});
 				});
+				
+				// 刷新套餐限权
+				window.addEventListener('refreshBusFunc', function(data) {
+					mui.fire(self.opener(),'refreshBusFunc');
+				});	
 			});
 			
 			//退出当前账号

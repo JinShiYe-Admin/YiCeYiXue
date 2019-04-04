@@ -118,6 +118,10 @@
 				orders.orderDetail = utils.getDataFromUrl(window.location.href);
 				orders.orderDetail.imgUrl = setImg(orders.orderDetail.imgUrl,1);
 			});
+			
+			window.addEventListener('refreshList', function(data) {
+				mui.fire(plus.webview.currentWebview().opener(), 'refreshList', {});
+			});	
 
 			var orders = new Vue({
 				el: '#orders',
