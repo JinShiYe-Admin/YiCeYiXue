@@ -53,9 +53,9 @@
 						<div class="mui-pull" v-if="!orderList.length">暂无套餐</div>
 					</div>
 					<div class="mui-scroll">
-						<ul class="mui-table-view" v-cloak>
-							<li v-for="item in orderListLimit" @click.stop="toMealDetails($event,item)" class="mui-table-view-cell mui-media">
-								<a href="javascript:;" v-cloak>
+						<ul class="mui-table-view" v-cloak v-if="ajaxCount>2">
+							<li v-for="(item,key) in orderListLimit" :key="key" @click.stop="toMealDetails($event,item)" class="mui-table-view-cell mui-media">
+								<a href="javascript:;">
 									<img class="mui-media-object mui-pull-left" :src="item.busimg">
 									<div class="mui-media-body">
 										<p v-if="item.orderFlag" class='mui-ellipsis-title'>{{item.cnname}}
@@ -155,29 +155,29 @@
 					flag: 0, //0刷新，1加载更多
 					pageIndex: 1, //当前页数
 					canTap: true, //下拉刷新时，上拉加载能否使用 true
-					isRendered: false, //是否渲染完成
+					ajaxCount: 0, //请求数量, 加载信息次数
 					isPullingDown: false //是否正在下拉
 				},
 				computed: {
 					// 筛选出可用套餐
 					orderListLimit: function(){
-						var list = this.orderList.filter(function(v){
-							// 排除停用的
-// 							if(v.orderFlag){
-// 								return v.serstat?true:false;
-// 							}else{
+						var list = [];
+						this.orderList.forEach(function(v,i){
+							if(v.fext){
 								// 排除无学段的
-								if(v.fext){
-									var hasItem = false;
-									for(var i=0; i<v.fext.length; i++){
-										if(v.fext[i]&&v.fext[i].itemcode=="prd") hasItem=true;
-									}
-									return hasItem;
-								}else{
-									return true;
+								var hasItem = false;
+								for(var i=0; i<v.fext.length; i++){
+									if(v.fext[i]&&v.fext[i].itemcode=="prd") hasItem=true;
 								}
-							// }
-							
+								if(hasItem) {
+									// 已订购的排前面
+									if(v.orderFlag){
+										list.unshift(v);
+									}else{
+										list.push(v);
+									}
+								};
+							}
 						});
 						return list;
 					}
@@ -189,7 +189,7 @@
 							this.$options.methods.btnClick(item);
 						} else { //点击li标签
 						// 未购买和停用的套餐 立即订购
-							if(item.orderFlag == 0 || item.serstat==0)
+							if(item.orderFlag == 0)
 								utils.mOpenWithData("../../html/order/packageDetails_order.html", item);
 							else
 								utils.mOpenWithData("../../html/order/packageDetails_renew.html", item);
@@ -211,6 +211,7 @@
 			//3.12.获取套餐表
 			function getOrderList() {
 				isLoading = true;
+				orders.ajaxCount = 0;
 				var enData1 = {};
 				//不需要加密的数据
 				var comData1 = {
@@ -218,7 +219,6 @@
 					bustp: '0', //套餐类型,0全部,1基本套餐,2CP套餐
 					utoken: personal.utoken, //用户令牌
 					appid: publicParameter.appid, //系统所分配的应用ID
-					// functypes: "YCYXZS",
 					functypes: functypes
 				};
 				cur_fcodes = []; //益测益学套餐功能代码串
@@ -228,6 +228,7 @@
 					console.log("获取套餐表：");
 					console.log(data1)
 					events.closeWaiting();
+					orders.ajaxCount++;
 					if(data1.RspCode == 0) {
 						//主动添加是否订购字段
 						var sysbus = data1.RspData?data1.RspData.sysbus:[];
@@ -274,9 +275,9 @@
 					console.log("用户已订购套餐: ");
 					console.log(data1);
 					events.closeWaiting();
+					orders.ajaxCount++;
 					if(data1.RspCode == 0) {
 						if(data1.RspData) {
-							// var orderModelBus = [];
 							//循环当前套餐列表
 							for(var i = 0; i < orders.orderList.length; i++) {
 								var orderModel = orders.orderList[i];
@@ -285,15 +286,12 @@
 									var userBusModel = data1.RspData.userbus[a];
 									//当前已订购套餐 userBusModel.serstat
 									if(orderModel.serviceid == userBusModel.servid) {
-										// orderModelBus.push($.extend({}, orderModel)); //已订购套餐,保留原套餐信息
 										orderModel = $.extend(orderModel, userBusModel);
 										orderModel.orderFlag = 1;
 										break;
 									}
 								}
 							}
-							// 补上已订购套餐
-							// orders.orderList = orders.orderList.concat(orderModelBus);
 						}
 						// 排除停用的
 // 						orders.orderList = orders.orderList.filter(function(v){
@@ -304,14 +302,13 @@
 // 							}
 // 						});
 						// 已订购的排前面
-						orders.orderList.sort(function(a,b){
-							return b.orderFlag-a.orderFlag;
-						});
+// 						orders.orderList.sort(function(a,b){
+// 							return b.orderFlag-a.orderFlag;
+// 						});
 						console.log('GetUserBusFunc合并后:');
 						console.log(orders.orderList);
-						if(!orders.isRendered){
+						if(orders.ajaxCount>2){
 							document.querySelector('.mui-pull-top-pocket').classList.remove('mui-hidden');
-							orders.isRendered = true;
 						}
 					} else {
 						mui.toast(data1.RspTxt);
@@ -329,6 +326,7 @@
 					appid: publicParameter.appid //系统所分配的应用ID
 				};
 				postDataEncry('SysBusFunc', {}, comData2, 0, function(data2) {
+					orders.ajaxCount++;
 					console.log("套餐功能: ");
 					console.log(data2);
 					if(data2.RspCode == 0) {
@@ -347,6 +345,9 @@
 						}
 					} else {
 						mui.toast(data2.RspTxt);
+					}
+					if(orders.ajaxCount>2){
+						document.querySelector('.mui-pull-top-pocket').classList.remove('mui-hidden');
 					}
 				});
 			}

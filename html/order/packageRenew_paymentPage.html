@@ -26,7 +26,7 @@
 				margin-bottom: 5px;
 			}
 			.mui-row.mui-media {
-				padding: 10px;
+				height: 118px;
 			}
 			.flex-between .mui-media-object {
 				width: 90px;
@@ -219,14 +219,15 @@
 					</div>
 				</form>
 				
-				<div class="mui-row bottom-row">
-					<button class="mui-col-xs-8 mui-col-sm-8 pay-btn-je">
-	    				¥ <span id="zfje-2" v-cloak>{{orderPrice(feem)}}</span>元
-	    				<span id="zffs"></span>
-	    			</button>
-					<button class="mui-btn mui-btn-success mui-col-xs-4 mui-col-sm-4 pay-btn" @click="payAction()" :disabled="isDisabled">确认支付</button>
-				</div>
 			</div>
+		</div>
+		
+		<div class="mui-row bottom-row">
+			<button class="mui-col-xs-8 mui-col-sm-8 pay-btn-je">
+				¥ <span id="zfje-2">0</span>元
+				<span id="zffs"></span>
+			</button>
+			<button id="payBtn" class="mui-btn mui-btn-success mui-col-xs-4 mui-col-sm-4 pay-btn" disabled>确认支付</button>
 		</div>
 		
 		<script type="text/javascript" src="../../js/mui.min.js"></script>
@@ -262,12 +263,19 @@
 			var monthList=[];//月份集合
 			var nowDate=getNowFormatDate1();
 			
+			// 支付按钮
+			var payBtn = document.getElementById("payBtn");
+			payBtn.addEventListener("click", function(){
+				orderDetailData.payAction();
+			});
+			var pay_feem = document.getElementById("zfje-2");
+			
 			var orderDetailData = new Vue({
 				el: '#orderDetailData',
 				data: {
 					nowDate:nowDate,
 					newEtime:'',
-					orderDetail: {},
+					orderDetail: {cnname: "益测益学套餐", busnote: "套餐介绍"},
 					radioChecked: false,//是否选择支付方式
 					chekcboxChecked: false,//注册协议是否阅读
 					isDisabled: true,//支付按钮是否关闭
@@ -275,6 +283,18 @@
 					monthList: monthList,
 					servm:0,//订购套餐总月数
 					feem:0//订购套餐总费用
+				},
+				watch: {
+					'feem': function(v) {
+						pay_feem.innerHTML = this.orderPrice(v);
+					},
+					'isDisabled': function(v, ov) {
+						if(v) {
+							payBtn.setAttribute("disabled", true);
+						}else{
+							payBtn.removeAttribute("disabled");
+						}
+					}
 				},
 				methods: {
 					orderPrice: orderPrice,
@@ -448,6 +468,8 @@
 				  var currentdate = year + seperator1 + month + seperator1 + strDate;
 				  return currentdate;
 			};
+			
+			// orderDetailData.orderDetail = {"funcs":[{"fcode":"ycyx04","itemcode":null,"itemsons":null}],"serviceid":"tcycyx04","feecode":"10","cnname":"益测益学（小初）","fcodes":"ycyx04","busmonth":1,"bustype":1,"busnote":"以测试的形式发现学习特长（小初）","note":"","busimg":"../../img/logo.png","orderFlag":1,"busext":[{"forid":106,"fcode":"ycyx04","itemcode":"prd","itemsons":"2|小学"}],"forid":106,"uid":"ceshi01","utname":null,"servid":"tcycyx04","servtype":1,"cname":"益测益学（小初）","stime":"2018.11.14","etime":"2018.12.14","frmtype":0,"serstat":1};
 			
 		</script>
 	</body>

@@ -21,7 +21,7 @@ function sendAjax(url, ops, times) {
 	jQuery.ajax(url, {
 		data: data,
 		type: ops.type||"post",
-		timeout: ops.timeout||6000,
+		timeout: ops.timeout||5000,
 		dataType: 'json',
 		success: function(res) {
 			if(res.state=="ok") {
@@ -63,7 +63,7 @@ function sendAjax(url, ops, times) {
 			}
 		},
 		error:function(xhr,type,errorThrown){
-			if(times>2) {
+			if(times>3) {
 				plus.nativeUI.toast( '服务器异常：'+type );
 				ops.error && ops.error();
 			}else{
