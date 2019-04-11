@@ -1,8 +1,8 @@
-﻿//此js用于保存本地存储时，用到的key值
+//此js用于保存本地存储时，用到的key值
 
 var storageKeyName = (function(mod) {
 
-	mod.key = 0; //0,开发;1,云测试；2，正式
+	mod.key = 1; //0,开发;1,云测试；2，正式
 	mod.pay = 1; //0,单个商家接口;1,多商家接口
 	var exLog = console.log;
 	console.log = function(hint, object) {
@@ -66,7 +66,7 @@ var storageKeyName = (function(mod) {
 			mod.QNGETUPTOKENHEADIMGE = 'https://jbyc.jiaobaowang.net:8504/Api/QiNiu/GetUpLoadToKen'; //获取上传个人头像，群头像，资料头像
 			
 			//益测益学服务端地址
-			mod.YCYXHOST = "hhttps://gxcs.jiaobaowang.net/yiceyixue";
+			mod.YCYXHOST = "https://gxcs.jiaobaowang.net/yiceyixue";
 			break;
 			
 		case 2://正式
