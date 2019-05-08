@@ -46,6 +46,10 @@
 				font-size: 16px;
 				width: 100%;
 				padding: 0;
+				/* backface-visibility: hidden; */
+			}
+			body,html {
+				height: auto;
 			}
 		</style>
 	</head>
@@ -106,10 +110,14 @@
 	<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
 	<script type="text/javascript">
 		var loginFlag = 0; //0自动登录，1不自动登录
+		
 		mui.plusReady(function() {
-			plus.webview.currentWebview().setStyle({
-		        softinputMode: "adjustResize"
-		    });
+			var self = plus.webview.currentWebview();
+			self.setStyle({
+				scrollIndicator: "none",
+				// softinputMode: "adjustResize"
+			});
+
 		    //禁止横屏
 			plus.screen.lockOrientation("portrait-primary");
 		    
@@ -184,6 +192,8 @@
 		var register = document.getElementById("register");
 		if(register) {
 			register.addEventListener('tap', function (event) {
+				document.getElementById("account").blur();
+				document.getElementById("password").blur();
 		        mui.openWindow({url: 'register.html'});
 		    });
 		}

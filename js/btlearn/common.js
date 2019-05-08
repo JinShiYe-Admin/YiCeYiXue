@@ -22,7 +22,7 @@ function sendAjax(url, ops, times) {
 		data: data,
 		type: ops.type||"post",
 		timeout: ops.timeout||5000,
-		dataType: 'json',
+		// dataType: 'json',
 		success: function(res) {
 			if(res.state=="ok") {
 				ops.success && ops.success(res);
@@ -65,7 +65,7 @@ function sendAjax(url, ops, times) {
 		error:function(xhr,type,errorThrown){
 			if(times>3) {
 				plus.nativeUI.toast( '服务器异常：'+type );
-				ops.error && ops.error();
+				ops.error && ops.error(xhr,type,errorThrown);
 			}else{
 				times++;
 				sendAjax(url, ops, times);
@@ -152,7 +152,8 @@ function newTest(catalogId, title) {
 				plus.nativeUI.closeWaiting();
 			}
 		},
-		fail: function() {
+		fail: function(res) {
+			console.log(res);
 			plus.nativeUI.closeWaiting();
 		},
 		error: function() {
